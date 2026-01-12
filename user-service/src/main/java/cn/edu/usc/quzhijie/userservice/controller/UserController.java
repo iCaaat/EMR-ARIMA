@@ -22,7 +22,15 @@ public class UserController {
      */
     @PostMapping("/login")
     public Result<List<UserVO>> login(@RequestBody UserLoginDTO dto) {
-        return Result.success(userService.login(dto));
+        return Result.success("登录成功!", userService.login(dto));
+    }
+
+    /**
+     * 用户注册
+     */
+    @PostMapping("/register")
+    public Result<List<UserVO>> register(@RequestBody UserRegisterDTO dto) {
+
     }
 
 
