@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.userservice.controller;
 
 import cn.edu.usc.quzhijie.userservice.common.result.Result;
 import cn.edu.usc.quzhijie.userservice.dto.UserLoginDTO;
+import cn.edu.usc.quzhijie.userservice.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.userservice.service.UserService;
 import cn.edu.usc.quzhijie.userservice.vo.UserVO;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,8 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
-    public Result<List<UserVO>> register(@RequestBody UserRegisterDTO dto) {
-
+    public Result<String> register(@RequestBody UserRegisterDTO dto) {
+        return Result.success("注册成功!", userService.register(dto));
     }
 
 
