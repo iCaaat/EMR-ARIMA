@@ -43,6 +43,12 @@ public class UserServiceImpl implements UserService {
             throw new BizException("用户不存在");
         }
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        boolean matches = encoder.matches(password, user.get(0).getPassword());
+        if (!matches) {
+            throw new BizException("用户名或密码错误");
+        }
+
         return userBaseConverter.toVOList(user);
     }
 
