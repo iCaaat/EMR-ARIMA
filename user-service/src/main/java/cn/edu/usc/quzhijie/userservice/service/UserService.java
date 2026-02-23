@@ -2,7 +2,7 @@ package cn.edu.usc.quzhijie.userservice.service;
 
 import cn.edu.usc.quzhijie.userservice.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.userservice.dto.UserRegisterDTO;
-import cn.edu.usc.quzhijie.userservice.vo.UserVO;
+import cn.edu.usc.quzhijie.userservice.vo.LoginVO;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public interface UserService {
      * @param dto
      * @return
      */
-    List<UserVO> login(UserLoginDTO dto);
+    List<LoginVO> login(UserLoginDTO dto);
 
     /**
      * 注册

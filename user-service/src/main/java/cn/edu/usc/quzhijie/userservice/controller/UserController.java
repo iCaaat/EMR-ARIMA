@@ -4,7 +4,7 @@ import cn.edu.usc.quzhijie.userservice.common.result.Result;
 import cn.edu.usc.quzhijie.userservice.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.userservice.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.userservice.service.UserService;
-import cn.edu.usc.quzhijie.userservice.vo.UserVO;
+import cn.edu.usc.quzhijie.userservice.vo.LoginVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +22,7 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public Result<List<UserVO>> login(@RequestBody UserLoginDTO dto) {
+    public Result<List<LoginVO>> login(@RequestBody UserLoginDTO dto) {
         return Result.success("登录成功!", userService.login(dto));
     }
 

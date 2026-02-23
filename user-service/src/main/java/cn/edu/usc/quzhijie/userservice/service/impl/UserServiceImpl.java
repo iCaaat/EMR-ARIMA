@@ -4,17 +4,23 @@ package cn.edu.usc.quzhijie.userservice.service.impl;
 import cn.edu.usc.quzhijie.userservice.converter.UserBaseConverter;
 import cn.edu.usc.quzhijie.userservice.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.userservice.dto.UserRegisterDTO;
+import cn.edu.usc.quzhijie.userservice.entity.Role;
 import cn.edu.usc.quzhijie.userservice.entity.UserBase;
 import cn.edu.usc.quzhijie.userservice.exception.BizException;
 import cn.edu.usc.quzhijie.userservice.mapper.UserMapper;
 import cn.edu.usc.quzhijie.userservice.service.UserService;
-import cn.edu.usc.quzhijie.userservice.vo.UserVO;
+import cn.edu.usc.quzhijie.userservice.util.JwtUtils;
+import cn.edu.usc.quzhijie.userservice.vo.LoginVO;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,33 +29,53 @@ public class UserServiceImpl implements UserService {
 
     private final UserBaseConverter userBaseConverter;
 
+    private final JwtUtils jwtUtils;
+
     /**
      * 登录
      * @param dto
      * @return
      */
     @Override
-    public List<UserVO> login(UserLoginDTO dto) {
+    public List<LoginVO> login(UserLoginDTO dto) {
         String username = dto.getUsername();
         String password = dto.getPassword();
 
-        if (StringUtils.isBlank(username)) {
-            throw new BizException("用户名不能为空");
+        // 1.参数简单校验
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            throw new BizException("用户名或密码不能为空");
         }
 
-        List<UserBase> user = userMapper.getByUsername(username);
-
-        if (user.isEmpty()) {
+        // 2.查用户
+        UserBase user = userMapper.selectByUsername(username);
+        if (user == null) {
             throw new BizException("用户不存在");
         }
 
+        // 3.查角色
+        int uid = user.getUid();
+        Role role = userMapper.selectRoleByUid(uid);
+        String roleName = role.getRoleName();
+
+        // 4.验证密码
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        boolean matches = encoder.matches(password, user.get(0).getPassword());
+        boolean matches = encoder.matches(password, user.getPassword());
         if (!matches) {
             throw new BizException("用户名或密码错误");
         }
 
-        return userBaseConverter.toVOList(user);
+        // 5.生成token
+        Map<String, Object> map = new HashMap<>();
+        String token = jwtUtils.generateToken(user.getUsername(), roleName);
+
+        // 6.处理成VO
+        LoginVO loginVO = userBaseConverter.toVO(user);
+        loginVO.setToken(token);
+
+        // 7.统一返回为list
+        List<LoginVO> list = new ArrayList<>();
+        list.add(loginVO);
+        return list;
     }
 
     /**

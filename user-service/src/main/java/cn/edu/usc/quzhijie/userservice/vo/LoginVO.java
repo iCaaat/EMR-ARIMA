@@ -5,7 +5,7 @@ import lombok.Data;
 import java.sql.Date;
 
 @Data
-public class UserVO {
+public class LoginVO {
     private Integer userId;
     private String username;
     private String realName;
@@ -14,4 +14,5 @@ public class UserVO {
     private String email;
     private Date createTime;
     private Date updateTime;
+    private String token;
 }

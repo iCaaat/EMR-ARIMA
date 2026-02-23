@@ -1,6 +1,6 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.2.111:3306/test?useSSL=false&serverTimezone=UTC
-    username: test
-    password: 123456
+    url: jdbc:mysql://39.108.132.59:3306/emr_arima_dev?useSSL=false&serverTimezone=UTC
+    username: admin
+    password: LuckyBY.#dev*0128

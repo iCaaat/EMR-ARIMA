@@ -12,3 +12,7 @@ mybatis:
   type-aliases-package: cn.edu.usc.quzhijie.userservice.entity
   configuration:
     map-underscore-to-camel-case: true
+
+jwt:
+  secret: EUqxSvI4extlwRUeCDNBVq4p6SIp1JSyK7hTXAbvE7M=
+  expiration: 3600000
