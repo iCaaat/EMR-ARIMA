@@ -1,7 +1,6 @@
-package cn.edu.usc.quzhijie.emrservice.user.exception;
+package cn.edu.usc.quzhijie.emrservice.common.exception;
 
-import cn.edu.usc.quzhijie.emrservice.user.result.Result;
-import cn.edu.usc.quzhijie.emrservice.user.exception.BizException;
+import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

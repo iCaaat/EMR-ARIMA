@@ -1,4 +1,4 @@
-package cn.edu.usc.quzhijie.emrservice.user.config;
+package cn.edu.usc.quzhijie.emrservice.common.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

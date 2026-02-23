@@ -1,6 +1,6 @@
-package cn.edu.usc.quzhijie.emrservice.user.security;
+package cn.edu.usc.quzhijie.emrservice.common.security;
 
-import cn.edu.usc.quzhijie.emrservice.user.util.JwtUtils;
+import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

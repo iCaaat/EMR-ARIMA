@@ -1,4 +1,4 @@
-package cn.edu.usc.quzhijie.emrservice.user.result;
+package cn.edu.usc.quzhijie.emrservice.common.result;
 
 import java.io.Serializable;
 

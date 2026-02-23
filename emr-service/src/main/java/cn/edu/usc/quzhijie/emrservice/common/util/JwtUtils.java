@@ -1,7 +1,7 @@
-package cn.edu.usc.quzhijie.emrservice.user.util;
+package cn.edu.usc.quzhijie.emrservice.common.util;
 
 
-import cn.edu.usc.quzhijie.emrservice.user.config.JwtProperties;
+import cn.edu.usc.quzhijie.emrservice.common.config.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;

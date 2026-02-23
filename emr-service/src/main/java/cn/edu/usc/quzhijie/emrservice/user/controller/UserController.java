@@ -1,6 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.user.controller;
 
-import cn.edu.usc.quzhijie.emrservice.user.result.Result;
+import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;

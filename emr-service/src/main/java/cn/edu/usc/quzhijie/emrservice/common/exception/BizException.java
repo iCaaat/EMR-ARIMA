@@ -1,4 +1,4 @@
-package cn.edu.usc.quzhijie.emrservice.user.exception;
+package cn.edu.usc.quzhijie.emrservice.common.exception;
 
 import lombok.Getter;
 
