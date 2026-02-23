@@ -1,0 +1,23 @@
+package cn.edu.usc.quzhijie.emrservice.user.service;
+
+import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
+import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+
+import java.util.List;
+
+public interface UserService {
+    /**
+     * 登录
+     * @param dto
+     * @return
+     */
+    List<LoginVO> login(UserLoginDTO dto);
+
+    /**
+     * 注册
+     * @param dto
+     * @return
+     */
+    String register(UserRegisterDTO dto);
+}
