@@ -3,6 +3,7 @@ package cn.edu.usc.quzhijie.emrservice.user.service;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface UserService {
      * @param dto
      * @return
      */
-    List<LoginVO> login(UserLoginDTO dto);
+    LoginVO login(UserLoginDTO dto);
 
     /**
      * 注册
@@ -20,4 +21,9 @@ public interface UserService {
      * @return
      */
     String register(UserRegisterDTO dto);
+
+    /**
+     * 查询用户信息
+     */
+    UserVO getUserInfo(String username);
 }

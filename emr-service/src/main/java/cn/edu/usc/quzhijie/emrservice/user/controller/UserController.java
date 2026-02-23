@@ -5,12 +5,14 @@ import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,22 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public Result<List<LoginVO>> login(@RequestBody UserLoginDTO dto) {
-        return Result.success("登录成功!", userService.login(dto));
+    public ResponseEntity<Result<LoginVO>> login(@RequestBody UserLoginDTO dto) {
+        LoginVO vo = userService.login(dto);
+        String token = vo.getToken();
+
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(false) // 本地开发
+                .path("/")
+                .maxAge(Duration.ofMinutes(15))
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(Result.success("登录成功!", vo));
     }
 
     /**
@@ -34,7 +50,13 @@ public class UserController {
         return Result.success("注册成功!", userService.register(dto));
     }
 
-
+    /**
+     * 获取个人基本信息+详细信息
+     */
+    @GetMapping("/{username}")
+    public Result<UserVO> getUserInfo(@PathVariable String username) {
+        return Result.success("查询成功", userService.getUserInfo(username));
+    }
 
 
 }

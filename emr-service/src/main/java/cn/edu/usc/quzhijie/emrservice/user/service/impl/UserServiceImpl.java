@@ -11,6 +11,7 @@ import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<LoginVO> login(UserLoginDTO dto) {
+    public LoginVO login(UserLoginDTO dto) {
         String username = dto.getUsername();
         String password = dto.getPassword();
 
@@ -71,10 +72,7 @@ public class UserServiceImpl implements UserService {
         LoginVO loginVO = userBaseConverter.toVO(user);
         loginVO.setToken(token);
 
-        // 7.统一返回为list
-        List<LoginVO> list = new ArrayList<>();
-        list.add(loginVO);
-        return list;
+        return loginVO;
     }
 
     /**
@@ -109,6 +107,11 @@ public class UserServiceImpl implements UserService {
 
 
         return "";
+    }
+
+    @Override
+    public UserVO getUserInfo(String username) {
+        return null;
     }
 
     /**
@@ -153,4 +156,6 @@ public class UserServiceImpl implements UserService {
 
         return true;
     }
+
+
 }
