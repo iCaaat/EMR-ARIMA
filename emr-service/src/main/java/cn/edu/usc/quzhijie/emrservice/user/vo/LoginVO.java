@@ -15,4 +15,5 @@ public class LoginVO {
     private Date createTime;
     private Date updateTime;
     private String token;
+    private String roleName;
 }

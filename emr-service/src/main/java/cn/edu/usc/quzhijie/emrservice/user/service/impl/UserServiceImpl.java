@@ -53,8 +53,9 @@ public class UserServiceImpl implements UserService {
         }
 
         // 3.查角色
-        int uid = user.getUid();
+        Integer uid = user.getUid();
         Role role = userMapper.selectRoleByUid(uid);
+        String roleCode = role.getRoleCode();
         String roleName = role.getRoleName();
 
         // 4.验证密码
@@ -65,12 +66,15 @@ public class UserServiceImpl implements UserService {
         }
 
         // 5.生成token
-        Map<String, Object> map = new HashMap<>();
-        String token = jwtUtils.generateToken(user.getUsername(), roleName);
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("uid", uid);
+        claim.put("role", roleCode);
+        String token = jwtUtils.generateToken(user.getUsername(), claim);
 
         // 6.处理成VO
         LoginVO loginVO = userBaseConverter.toVO(user);
         loginVO.setToken(token);
+        loginVO.setRoleName(roleName);
 
         return loginVO;
     }
@@ -109,9 +113,13 @@ public class UserServiceImpl implements UserService {
         return "";
     }
 
+    /**
+     * 查询基本信息
+     * @return UserVO
+     */
     @Override
     public UserVO getUserInfo(String username) {
-        return null;
+        return userMapper.selectInfoByUsername(username);
     }
 
     /**

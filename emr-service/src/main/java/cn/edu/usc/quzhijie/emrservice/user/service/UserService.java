@@ -26,4 +26,5 @@ public interface UserService {
      * 查询用户信息
      */
     UserVO getUserInfo(String username);
+
 }

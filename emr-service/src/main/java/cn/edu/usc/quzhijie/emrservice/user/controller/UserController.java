@@ -6,10 +6,14 @@ import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -53,8 +57,11 @@ public class UserController {
     /**
      * 获取个人基本信息+详细信息
      */
-    @GetMapping("/{username}")
-    public Result<UserVO> getUserInfo(@PathVariable String username) {
+    @GetMapping("/me")
+    public Result<UserVO> getUserInfo(Authentication authentication) {
+        Claims claims = (Claims) authentication.getPrincipal();
+
+        String username = claims.getSubject();
         return Result.success("查询成功", userService.getUserInfo(username));
     }
 

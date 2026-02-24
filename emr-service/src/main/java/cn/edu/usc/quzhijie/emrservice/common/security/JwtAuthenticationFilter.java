@@ -1,6 +1,7 @@
 package cn.edu.usc.quzhijie.emrservice.common.security;
 
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,11 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             if (jwtUtils.validateToken(token)) {
-                String username = jwtUtils.getUsername(token);
-                String role = jwtUtils.getClaim(token, "role").toString();
+                Claims claims = jwtUtils.parseToken(token);
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                username,
+                                claims,
                                 null,
                                 Collections.emptyList()
                         );
