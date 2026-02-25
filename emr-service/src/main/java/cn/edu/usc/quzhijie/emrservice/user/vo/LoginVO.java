@@ -2,7 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.user.vo;
 
 import lombok.Data;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class LoginVO {
@@ -12,8 +12,8 @@ public class LoginVO {
     private Character gender;
     private String phone;
     private String email;
-    private Date createTime;
-    private Date updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
     private String token;
     private String roleName;
 }

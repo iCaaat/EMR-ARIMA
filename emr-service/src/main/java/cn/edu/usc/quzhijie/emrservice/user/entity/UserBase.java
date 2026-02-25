@@ -2,7 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.user.entity;
 
 import lombok.Data;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class UserBase {
@@ -14,6 +14,6 @@ public class UserBase {
     private Character gender;
     private String phone;
     private String email;
-    private Date createTime;
-    private Date updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

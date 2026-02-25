@@ -2,7 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.user.entity;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class Role {
@@ -10,5 +10,5 @@ public class Role {
     private String roleName;
     private String roleCode;
     private String description;
-    private Date createTime;
+    private LocalDateTime createTime;
 }
