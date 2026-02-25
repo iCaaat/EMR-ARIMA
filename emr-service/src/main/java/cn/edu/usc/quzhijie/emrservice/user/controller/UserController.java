@@ -28,22 +28,8 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public ResponseEntity<Result<LoginVO>> login(@RequestBody UserLoginDTO dto) {
-        LoginVO vo = userService.login(dto);
-        String token = vo.getToken();
-
-        ResponseCookie cookie = ResponseCookie.from("token", token)
-                .httpOnly(true)
-                .secure(false) // 本地开发
-                .path("/")
-                .maxAge(Duration.ofMinutes(15))
-                .sameSite("Strict")
-                .build();
-
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(Result.success("登录成功!", vo));
+    public Result<LoginVO> login(@RequestBody UserLoginDTO dto) {
+        return Result.success("登录成功", userService.login(dto));
     }
 
     /**
@@ -55,13 +41,16 @@ public class UserController {
     }
 
     /**
+     * 注销登录
+     */
+
+
+    /**
      * 获取个人基本信息+详细信息
      */
     @GetMapping("/me")
     public Result<UserVO> getUserInfo(Authentication authentication) {
-        Claims claims = (Claims) authentication.getPrincipal();
-
-        String username = claims.getSubject();
+        String username = authentication.getName();
         return Result.success("查询成功", userService.getUserInfo(username));
     }
 
