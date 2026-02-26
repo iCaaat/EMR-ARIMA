@@ -41,11 +41,6 @@ public class UserController {
     }
 
     /**
-     * 注销登录
-     */
-
-
-    /**
      * 获取个人基本信息+详细信息
      */
     @GetMapping("/me")
