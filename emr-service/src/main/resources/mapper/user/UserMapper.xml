@@ -5,6 +5,9 @@
     <select id="selectByUsername" resultType="UserBase">
         select * from user_base where username = #{username}
     </select>
+    <select id="selectByUid" resultType="UserBase">
+        select * from user_base where uid = #{uid}
+    </select>
 
     <select id="selectRoleByUid" resultType="Role">
         select r.* from role r
@@ -33,4 +36,30 @@
         left join role r on r.role_id = ur.role_id
         where ub.username = #{username}
     </select>
+    <select id="selectInfoByUid" resultType="UserVO">
+        select
+            ub.uid,
+            ub.username,
+            ub.real_name,
+            ub.id_card,
+            ub.gender,
+            ub.birthday,
+            ub.phone,
+            ub.email,
+            ub.create_time,
+            ub.update_time,
+            r.role_id,
+            r.role_name,
+            r.role_code,
+            r.description
+        from user_base ub
+                 left join user_role ur on ub.uid = ur.uid
+                 left join role r on r.role_id = ur.role_id
+        where ub.uid = #{uid}
+    </select>
+
+    <!-- 更新密码 -->
+    <update id="updatePasswordByUid">
+        update user_base set password = #{password} where uid = #{uid}
+    </update>
 </mapper>

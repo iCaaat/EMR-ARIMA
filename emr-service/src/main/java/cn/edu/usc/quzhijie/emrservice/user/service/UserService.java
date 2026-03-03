@@ -1,11 +1,10 @@
 package cn.edu.usc.quzhijie.emrservice.user.service;
 
+import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
-
-import java.util.List;
 
 public interface UserService {
     /**
@@ -25,6 +24,7 @@ public interface UserService {
     /**
      * 查询用户信息
      */
-    UserVO getUserInfo(String username);
+    UserVO getUserInfo(Integer uid);
 
+    String changePassword(UserChangePasswordDTO dto);
 }

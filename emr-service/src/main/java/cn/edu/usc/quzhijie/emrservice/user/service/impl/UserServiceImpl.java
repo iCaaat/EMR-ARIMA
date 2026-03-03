@@ -1,15 +1,16 @@
 package cn.edu.usc.quzhijie.emrservice.user.service.impl;
 
 
+import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
+import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.converter.UserBaseConverter;
+import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
-import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
-import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import io.micrometer.common.util.StringUtils;
@@ -17,9 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -118,8 +117,8 @@ public class UserServiceImpl implements UserService {
      * @return UserVO
      */
     @Override
-    public UserVO getUserInfo(String username) {
-        return userMapper.selectInfoByUsername(username);
+    public UserVO getUserInfo(Integer uid) {
+        return userMapper.selectInfoByUid(uid);
     }
 
     /**
@@ -165,5 +164,32 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public String changePassword(UserChangePasswordDTO dto) {
+        Integer uid = dto.getUid();
+        String oldPassword = dto.getOldPassword();
+        String newPassword = dto.getNewPassword();
+        String confirmPassword = dto.getConfirmNewPassword();
 
+        if (StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword) || StringUtils.isBlank(confirmPassword)) {
+            throw new BizException("密码不能为空");
+        }
+        if (oldPassword.equals(newPassword)) {
+            throw new BizException("新旧密码不能相同");
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        UserBase user = userMapper.selectByUid(uid);
+        boolean matches = encoder.matches(oldPassword, user.getPassword());
+        if (!matches) {
+            throw new BizException("旧密码错误");
+        }
+
+        String encodeNewPwd = encoder.encode(newPassword);
+        Integer res = userMapper.updatePasswordByUid(uid, encodeNewPwd);
+        if (res <= 0) {
+            throw new BizException("密码修改失败");
+        }
+        return "修改密码成功,请重新登录!";
+    }
 }

@@ -1,23 +1,16 @@
 package cn.edu.usc.quzhijie.emrservice.user.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
+import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Duration;
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -45,8 +38,17 @@ public class UserController {
      */
     @GetMapping("/me")
     public Result<UserVO> getUserInfo(Authentication authentication) {
-        String username = authentication.getName();
-        return Result.success("查询成功", userService.getUserInfo(username));
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+        return Result.success("查询成功", userService.getUserInfo(uid));
+    }
+
+    /**
+     * 密码修改
+     */
+    @PutMapping("/password")
+    public Result<String> changePassword(@RequestBody UserChangePasswordDTO dto) {
+        return Result.success(userService.changePassword(dto));
     }
 
 

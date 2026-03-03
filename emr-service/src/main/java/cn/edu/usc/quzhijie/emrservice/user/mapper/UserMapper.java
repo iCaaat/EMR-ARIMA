@@ -9,8 +9,13 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper {
     UserBase selectByUsername(@Param("username") String username);
+    UserBase selectByUid(@Param("uid") Integer uid);
 
-    Role selectRoleByUid(@Param("uid") int uid);
+    Role selectRoleByUid(@Param("uid") Integer uid);
 
     UserVO selectInfoByUsername(@Param("username") String username);
+    UserVO selectInfoByUid(@Param("uid") Integer uid);
+
+
+    Integer updatePasswordByUid(@Param("uid") Integer uid, @Param("password") String encodeNewPwd);
 }
