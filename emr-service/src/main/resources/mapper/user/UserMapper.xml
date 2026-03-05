@@ -9,12 +9,19 @@
         select * from user_base where uid = #{uid}
     </select>
 
+    <!-- uid查角色 -->
     <select id="selectRoleByUid" resultType="Role">
         select r.* from role r
         join user_role ur on r.role_id = ur.role_id
         where ur.uid = #{uid}
     </select>
 
+    <!-- 角色代码查角色 -->
+    <select id="selectRoleByRoleCode" resultType="Role">
+        select * from role where role_code = #{roleCode}
+    </select>
+
+    <!-- 用户名查用户 -->
     <select id="selectInfoByUsername" resultType="UserVO">
         select
             ub.uid,
@@ -62,4 +69,25 @@
     <update id="updatePasswordByUid">
         update user_base set password = #{password} where uid = #{uid}
     </update>
+
+    <!-- 新增用户 -->
+    <insert id="insertUserBase" useGeneratedKeys="true" keyProperty="uid">
+        insert into user_base (username, password, real_name, id_card, gender, birthday, phone, email)
+    values (#{username}, #{password}, #{realName}, #{idCard}, #{gender}, #{birthday}, #{phone}, #{email})
+    </insert>
+
+    <!-- 新增用户角色信息 -->
+    <insert id="insertUserRole">
+        insert into user_role (uid, role_id)
+        values (#{uid}, #{roleId})
+    </insert>
+
+    <!-- 检查用户名是否存在 -->
+    <select id="checkUsernameExists" resultType="boolean">
+        select count(*) > 0 from user_base where username = #{username}
+    </select>
+    <!-- 检查用户身份证是否已注册 -->
+    <select id="checkRealNameAndIdCardExists" resultType="boolean">
+        select count(*) > 0 from user_base where real_name = #{realName} and id_card = #{idCard}
+    </select>
 </mapper>

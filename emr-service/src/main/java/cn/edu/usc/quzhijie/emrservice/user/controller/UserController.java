@@ -1,20 +1,24 @@
 package cn.edu.usc.quzhijie.emrservice.user.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
+import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import io.jsonwebtoken.Claims;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
     private final UserService userService;
     /**
@@ -29,7 +33,7 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
-    public Result<String> register(@RequestBody UserRegisterDTO dto) {
+    public Result<String> register(@RequestBody @Validated PatientRegisterDTO dto) {
         return Result.success("注册成功!", userService.register(dto));
     }
 
@@ -49,6 +53,18 @@ public class UserController {
     @PutMapping("/password")
     public Result<String> changePassword(@RequestBody UserChangePasswordDTO dto) {
         return Result.success(userService.changePassword(dto));
+    }
+
+    /**
+     * 查询用户是否存在
+     */
+    @GetMapping("/exists")
+    public Result<Boolean> checkUsernameExists(
+            @RequestParam
+            @NotBlank
+            @Size(min = 3, max = 20, message = "用户名长度必须在3-20之间")
+            String username) {
+        return Result.success("查询成功", userService.checkUsernameExists(username));
     }
 
 

@@ -2,14 +2,11 @@ package cn.edu.usc.quzhijie.emrservice.common.security;
 
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -51,10 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authentication.setDetails(claims);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (ExpiredJwtException e) {
-            throw new BadCredentialsException("Token过期");
         } catch (JwtException e) {
-            throw new BadCredentialsException("Token非法");
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

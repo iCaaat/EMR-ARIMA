@@ -11,7 +11,7 @@ public class UserVO {
     private String username;
     private String realName;
     private String idCard;
-    private Character gender;
+    private String gender;
     private LocalDate birthday;
     private String phone;
     private String email;
