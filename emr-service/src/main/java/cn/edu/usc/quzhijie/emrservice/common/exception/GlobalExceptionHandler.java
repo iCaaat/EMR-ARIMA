@@ -23,18 +23,20 @@ public class GlobalExceptionHandler {
 
     // DTO参数校验异常
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Result<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Result<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 
         FieldError fieldError = e.getBindingResult().getFieldError();
 
         String message = fieldError != null ? fieldError.getDefaultMessage() : "参数校验失败";
 
-        return Result.fail(400, message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Result.fail(400, message));
     }
 
     // 普通参数校验异常
     @ExceptionHandler(ConstraintViolationException.class)
-    public Result<?> handleConstraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<Result<?>> handleConstraintViolationException(ConstraintViolationException e) {
 
         String message = e.getConstraintViolations()
                 .stream()
@@ -42,21 +44,28 @@ public class GlobalExceptionHandler {
                 .map(ConstraintViolation::getMessage)
                 .orElse("参数校验失败");
 
-        return Result.fail(400, message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Result.fail(400, message));
     }
 
     // 处理缺失请求参数异常
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public Result<?> handleMissingServletRequestParameterException(
+    public ResponseEntity<Result<?>> handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e) {
 
-        return Result.fail(400, "缺少请求参数: " + e.getParameterName());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Result.fail(400, "缺少请求参数: " + e.getParameterName()));
     }
 
     // 处理其他未知异常
     @ExceptionHandler(Exception.class)
-    public Result<?> handleException(Exception e) {
+    public ResponseEntity<Result<?>> handleException(Exception e) {
         e.printStackTrace();
-        return Result.fail(500, "系统内部错误");
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Result.fail(500, "系统内部错误"));
     }
 }

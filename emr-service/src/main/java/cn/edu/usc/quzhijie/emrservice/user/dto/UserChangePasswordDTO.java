@@ -7,11 +7,14 @@ import lombok.Data;
 @Data
 public class UserChangePasswordDTO {
     private Integer uid;
+
     @NotBlank(message = "旧密码不能为空")
     private String oldPassword;
+
     @NotBlank(message = "新密码不能为空")
     @Size(min = 6, max = 20, message = "新密码长度必须在6-20之间")
     private String newPassword;
+
     @NotBlank(message = "请确认新密码")
     private String confirmNewPassword;
 }
