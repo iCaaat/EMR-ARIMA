@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.user.service;
 
+import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
@@ -29,4 +30,6 @@ public interface UserService {
     String changePassword(UserChangePasswordDTO dto);
 
     Boolean checkUsernameExists(String username);
+
+    String updateUserInfo(UpdateUserDTO dto);
 }

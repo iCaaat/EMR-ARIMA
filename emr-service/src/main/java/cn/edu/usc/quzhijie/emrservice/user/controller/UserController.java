@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.user.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
+import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
@@ -51,7 +52,10 @@ public class UserController {
      * 密码修改
      */
     @PutMapping("/password")
-    public Result<String> changePassword(@RequestBody UserChangePasswordDTO dto) {
+    public Result<String> changePassword(Authentication authentication, @RequestBody @Validated UserChangePasswordDTO dto) {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+        dto.setUid(uid);
         return Result.success(userService.changePassword(dto));
     }
 
@@ -61,11 +65,22 @@ public class UserController {
     @GetMapping("/exists")
     public Result<Boolean> checkUsernameExists(
             @RequestParam
-            @NotBlank
+            @NotBlank(message = "用户名不能为空")
             @Size(min = 3, max = 20, message = "用户名长度必须在3-20之间")
             String username) {
         return Result.success("查询成功", userService.checkUsernameExists(username));
     }
 
+    /**
+     * 修改个人信息
+     */
+    @PutMapping("/me")
+    public Result<String> updateUserInfo(Authentication authentication, @RequestBody @Validated UpdateUserDTO dto)
+    {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+        dto.setUid(uid);
+        return Result.success(userService.updateUserInfo(dto));
+    }
 
 }

@@ -5,6 +5,7 @@ import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.converter.UserBaseConverter;
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
+import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
@@ -137,12 +138,15 @@ public class UserServiceImpl implements UserService {
         if (oldPassword.equals(newPassword)) {
             throw new BizException("新旧密码不能相同");
         }
+        if (!newPassword.equals(confirmPassword)) {
+            throw new BizException("新密码和确认密码不一致");
+        }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         UserBase user = userMapper.selectByUid(uid);
         boolean matches = encoder.matches(oldPassword, user.getPassword());
         if (!matches) {
-            throw new BizException("旧密码错误");
+            throw new BizException("当前密码错误");
         }
 
         String encodeNewPwd = encoder.encode(newPassword);
@@ -151,6 +155,17 @@ public class UserServiceImpl implements UserService {
             throw new BizException("密码修改失败");
         }
         return "修改密码成功,请重新登录!";
+    }
+
+    @Override
+    public String updateUserInfo(UpdateUserDTO dto) {
+        Integer uid = dto.getUid();
+        UserBase user = userMapper.selectByUid(uid);
+        if (user == null) {
+            throw new BizException("用户不存在");
+        }
+        userMapper.updateUserByUid(dto);
+        return "修改个人信息成功";
     }
 
     @Override

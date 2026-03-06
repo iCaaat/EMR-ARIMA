@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.user.mapper;
 
+import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
@@ -39,4 +40,6 @@ public interface UserMapper {
 
     // 插入用户角色信息
     Integer insertUserRole(UserRole userRole);
+
+    Integer updateUserByUid(UpdateUserDTO dto);
 }

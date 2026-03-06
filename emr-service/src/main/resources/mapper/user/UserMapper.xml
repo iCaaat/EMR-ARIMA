@@ -69,6 +69,19 @@
     <update id="updatePasswordByUid">
         update user_base set password = #{password} where uid = #{uid}
     </update>
+    <!-- 更新用户信息 -->
+    <update id="updateUserByUid">
+        update user_base
+        set username = #{username},
+            real_name = #{realName},
+            id_card = #{idCard},
+            gender = #{gender},
+            birthday = #{birthday},
+            phone = #{phone},
+            email = #{email},
+            update_time = now()
+        where uid = #{uid}
+    </update>
 
     <!-- 新增用户 -->
     <insert id="insertUserBase" useGeneratedKeys="true" keyProperty="uid">
