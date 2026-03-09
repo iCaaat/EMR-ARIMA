@@ -23,14 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     /**
-     * 用户登录
-     */
-    @PostMapping("/login")
-    public Result<LoginVO> login(@RequestBody @Validated UserLoginDTO dto) {
-        return Result.success("登录成功", userService.login(dto));
-    }
-
-    /**
      * 用户注册
      */
     @PostMapping("/register")

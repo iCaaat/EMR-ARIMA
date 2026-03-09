@@ -8,12 +8,7 @@ import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 
 public interface UserService {
-    /**
-     * 登录
-     * @param dto
-     * @return
-     */
-    LoginVO login(UserLoginDTO dto);
+
 
     /**
      * 注册

@@ -20,4 +20,5 @@ mybatis:
 
 jwt:
   secret: EUqxSvI4extlwRUeCDNBVq4p6SIp1JSyK7hTXAbvE7M=
-  expiration: 3600000
+  expiration: 900000
+  refresh-token-expiration: 604800000

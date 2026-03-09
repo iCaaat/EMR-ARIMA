@@ -29,52 +29,9 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
-    private final UserBaseConverter userBaseConverter;
+
 
     private final JwtUtils jwtUtils;
-
-    /**
-     * 登录
-     * @param dto
-     * @return
-     */
-    @Override
-    public LoginVO login(UserLoginDTO dto) {
-        String username = dto.getUsername();
-        String password = dto.getPassword();
-
-        // 1.查用户
-        UserBase user = userMapper.selectByUsername(username);
-        if (user == null) {
-            throw new BizException("用户不存在");
-        }
-
-        // 2.查角色
-        Integer uid = user.getUid();
-        Role role = userMapper.selectRoleByUid(uid);
-        String roleCode = role.getRoleCode();
-        String roleName = role.getRoleName();
-
-        // 3.验证密码
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        boolean matches = encoder.matches(password, user.getPassword());
-        if (!matches) {
-            throw new BizException("用户名或密码错误");
-        }
-
-        // 4.生成token
-        Map<String, Object> claim = new HashMap<>();
-        claim.put("uid", uid);
-        claim.put("role", roleCode);
-        String token = jwtUtils.generateToken(user.getUsername(), claim);
-
-        // 6.处理成VO
-        LoginVO loginVO = userBaseConverter.toVO(user);
-        loginVO.setToken(token);
-        loginVO.setRoleName(roleName);
-
-        return loginVO;
-    }
 
     /**
      * 注册

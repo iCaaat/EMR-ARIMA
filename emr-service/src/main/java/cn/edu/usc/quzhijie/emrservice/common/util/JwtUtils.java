@@ -13,23 +13,29 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class JwtUtils {
+    public static final String ACCESS = "access";
+    public static final String REFRESH = "refresh";
+
     private final long expiration;
     private final SecretKey secretKey;
     private final JwtParser jwtParser;
+    private final long refreshTokenExpiration;
 
     public JwtUtils(JwtProperties jwtProperties) {
         this.expiration = jwtProperties.getExpiration();
         this.secretKey = Keys.hmacShaKeyFor( jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8) );
         this.jwtParser = Jwts.parser().verifyWith(secretKey).build();
+        this.refreshTokenExpiration = jwtProperties.getRefreshTokenExpiration();
     }
 
     /**
      * 生成 Token
      */
-    public String generateToken(String username, String role) {
+    public String generateAccessToken(String username, String role) {
 
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expiration);
@@ -37,6 +43,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role)
+                .claim("type", ACCESS)
                 .issuedAt(now)
                 .expiration(expirationDate)
                 .signWith(secretKey)
@@ -46,7 +53,7 @@ public class JwtUtils {
     /**
      * 生成 Token（支持自定义 claims）
      */
-    public String generateToken(String username, Map<String, Object> claims) {
+    public String generateAccessToken(String username, Map<String, Object> claims) {
 
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expiration);
@@ -54,6 +61,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .subject(username)
                 .claims(claims)
+                .claim("type", ACCESS)
                 .issuedAt(now)
                 .expiration(expirationDate)
                 .signWith(secretKey)
@@ -102,5 +110,43 @@ public class JwtUtils {
         } catch (JwtException e) {
             return false;
         }
+    }
+
+    /**
+     * 生成 Refresh Token
+     */
+    public String generateRefreshToken(String username, String role) {
+        String jti = UUID.randomUUID().toString();
+
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + refreshTokenExpiration);
+
+        return Jwts.builder()
+                .id(jti)
+                .subject(username)
+                .claim("type", REFRESH)
+                .claim("role", role)
+                .issuedAt(now)
+                .expiration(expirationDate)
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username, Map<String, Object> claims) {
+        String jti = UUID.randomUUID().toString();
+
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + refreshTokenExpiration);
+
+        return Jwts.builder()
+                .id(jti)
+                .subject(username)
+                .claims(claims)
+                .claim("type", REFRESH)
+                .issuedAt(now)
+                .expiration(expirationDate)
+                .signWith(secretKey)
+                .compact();
+
     }
 }

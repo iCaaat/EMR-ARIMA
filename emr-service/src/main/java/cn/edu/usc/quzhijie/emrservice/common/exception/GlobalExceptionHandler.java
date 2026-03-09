@@ -59,6 +59,14 @@ public class GlobalExceptionHandler {
                 .body(Result.fail(400, "缺少请求参数: " + e.getParameterName()));
     }
 
+    // 处理失效Token异常
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Result<?>> handleInvalidTokenException(InvalidTokenException e) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Result.fail(401, "无效Token"));
+    }
+
     // 处理其他未知异常
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<?>> handleException(Exception e) {

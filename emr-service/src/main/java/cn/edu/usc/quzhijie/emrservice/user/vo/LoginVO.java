@@ -14,6 +14,7 @@ public class LoginVO {
     private String email;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private String token;
+    private String accessToken;
+    private String refreshToken;
     private String roleName;
 }

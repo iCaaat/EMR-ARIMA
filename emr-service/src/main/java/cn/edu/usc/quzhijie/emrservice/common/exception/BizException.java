@@ -6,7 +6,6 @@ import lombok.Getter;
 public class BizException extends RuntimeException {
 
   private final Integer code;
-  private final String message;
 
   public BizException(String message) {
     this(400, message);
@@ -15,6 +14,5 @@ public class BizException extends RuntimeException {
   public BizException(Integer code, String message) {
     super(message);
     this.code = code;
-    this.message = message;
   }
 }
