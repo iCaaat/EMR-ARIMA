@@ -26,16 +26,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         Map<Integer, DepartmentVO> map = new HashMap<>();
         for (Department department : departments) {
             DepartmentVO vo = new DepartmentVO();
-            vo.setId(department.getId());
+            vo.setDepartmentId(department.getDepartmentId());
             vo.setName(department.getName());
-            map.put(department.getId(), vo);
+            map.put(department.getDepartmentId(), vo);
         }
 
         // 3.构建父子关系
         List<DepartmentVO> rootList = new ArrayList<>();
 
         for (Department department : departments) {
-            DepartmentVO current = map.get(department.getId());
+            DepartmentVO current = map.get(department.getDepartmentId());
 
             // 根节点
             if (department.getParentId() == null || department.getParentId() == 0) {

@@ -26,7 +26,7 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public Result<LoginVO> login(@RequestBody UserLoginDTO dto) {
+    public Result<LoginVO> login(@RequestBody @Validated UserLoginDTO dto) {
         return Result.success("登录成功", userService.login(dto));
     }
 

@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class Department {
-    private Integer id;
+    private Integer departmentId;
     private String name;
     private Integer parentId;
     private Integer sort;

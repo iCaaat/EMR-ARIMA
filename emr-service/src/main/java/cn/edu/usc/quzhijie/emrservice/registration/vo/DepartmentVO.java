@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class DepartmentVO {
-    private Integer id;
+    private Integer departmentId;
     private String name;
     private List<DepartmentVO> children = new ArrayList<>();
 
