@@ -147,6 +147,23 @@ public class JwtUtils {
                 .expiration(expirationDate)
                 .signWith(secretKey)
                 .compact();
+    }
 
+    /**
+     * 生成Refresh Token时手动设置过期时间
+     */
+    public String generateRefreshToken(String username, Map<String, Object> claims, Date expiration) {
+        String jti = UUID.randomUUID().toString();
+        Date now = new Date();
+
+        return Jwts.builder()
+                .id(jti)
+                .subject(username)
+                .claims(claims)
+                .claim("type", REFRESH)
+                .issuedAt(now)
+                .expiration(expiration)
+                .signWith(secretKey)
+                .compact();
     }
 }

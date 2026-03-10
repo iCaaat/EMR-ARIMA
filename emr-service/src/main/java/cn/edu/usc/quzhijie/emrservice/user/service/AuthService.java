@@ -2,9 +2,10 @@ package cn.edu.usc.quzhijie.emrservice.user.service;
 
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
 
 public interface AuthService {
-    String refreshToken(String refreshToken);
+    RefreshVO refreshToken(String refreshToken);
 
     /**
      * 登录
@@ -12,4 +13,6 @@ public interface AuthService {
      * @return
      */
     LoginVO login(UserLoginDTO dto);
+
+    String logout(String refreshToken);
 }

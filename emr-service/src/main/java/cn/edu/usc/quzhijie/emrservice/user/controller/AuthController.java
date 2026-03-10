@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.user.controller;
 
+import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.common.service.RedisService;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
@@ -7,16 +8,21 @@ import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.AuthService;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
 import io.jsonwebtoken.Claims;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
     private final AuthService authService;
 
@@ -29,15 +35,12 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Result<String>> refreshToken(@RequestParam String refreshToken) {
-        if (refreshToken == null || refreshToken.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Result.fail(400, "refresh token cannot be empty"));
-        }
+    public Result<RefreshVO> refreshToken(@RequestParam @NotBlank(message = "refresh token cannot be empty") String refreshToken) {
+        return Result.success("刷新成功", authService.refreshToken(refreshToken));
+    }
 
-        // 刷新令牌有效，生成新的访问令牌
-        String accessToken = authService.refreshToken(refreshToken);
-
-        return ResponseEntity.ok(Result.success("刷新成功", accessToken));
+    @DeleteMapping("/logout")
+    public Result<String> logout(@RequestParam @NotBlank(message = "refresh token cannot be empty") String refreshToken) {
+        return Result.success(authService.logout(refreshToken));
     }
 }

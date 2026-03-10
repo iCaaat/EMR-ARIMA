@@ -12,6 +12,7 @@ import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.AuthService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
 import io.jsonwebtoken.Claims;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -88,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String refreshToken(String refreshToken) {
+    public RefreshVO refreshToken(String refreshToken) {
         // 验证刷新令牌是否有效
         if (!jwtUtils.validateToken(refreshToken)) {
             throw new InvalidTokenException("invalid refresh token");
@@ -111,13 +113,37 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidTokenException("refresh token invalid");
         }
 
-        // 生成Access Token
+        // 删除旧R额fresh Token
+        redisService.delete("jwt:refresh:" +jti);
+
+        // 生成Access Token和Refresh Token
         Integer uid = (Integer) claims.get("uid");
         String role = (String) claims.get("role");
         Map<String, Object> claim = new HashMap<>();
         claim.put("uid", uid);
         claim.put("role", role);
+        String access = jwtUtils.generateAccessToken(username, claim);
+        Date expiration = claims.getExpiration();
+        String refresh = jwtUtils.generateRefreshToken(username, claim, expiration);
 
-        return jwtUtils.generateAccessToken(username, claim);
+        RefreshVO refreshVO = new RefreshVO();
+        refreshVO.setAccessToken(access);
+        refreshVO.setRefreshToken(refresh);
+
+        // 新Refresh Token添加到redis服务器
+        Claims newClaims = jwtUtils.parseToken(refresh);
+        String newJti = newClaims.getId();
+        long remainExpiration = expiration.getTime() - System.currentTimeMillis();
+        redisService.set("jwt:refresh:" + newJti, username, remainExpiration, TimeUnit.MILLISECONDS);
+
+        return refreshVO;
+    }
+
+    @Override
+    public String logout(String refreshToken) {
+        Claims claims = jwtUtils.parseToken(refreshToken);
+        String jti = (String) claims.getId();
+        redisService.delete("jwt:refresh:" + jti);
+        return "已退出登录";
     }
 }
