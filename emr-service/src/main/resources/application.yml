@@ -5,7 +5,7 @@ spring:
   profiles:
     active: mysql
   application:
-    name: user-service
+    name: emr-service
   data:
     redis:
       host: localhost
