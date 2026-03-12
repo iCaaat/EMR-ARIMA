@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: mysql
+    active: mysql-test
   application:
     name: emr-service
   data:
