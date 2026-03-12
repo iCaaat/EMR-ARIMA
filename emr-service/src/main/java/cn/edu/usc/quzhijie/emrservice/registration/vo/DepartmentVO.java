@@ -9,6 +9,7 @@ import java.util.List;
 public class DepartmentVO {
     private Integer departmentId;
     private String name;
+    private String description;
     private List<DepartmentVO> children = new ArrayList<>();
 
 

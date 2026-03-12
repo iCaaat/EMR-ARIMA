@@ -10,5 +10,6 @@ public class Department {
     private String name;
     private Integer parentId;
     private Integer sort;
+    private String description;
     private LocalDateTime createTime;
 }

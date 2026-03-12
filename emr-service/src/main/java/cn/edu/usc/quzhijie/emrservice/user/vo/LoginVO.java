@@ -9,7 +9,6 @@ public class LoginVO {
     private Integer userId;
     private String username;
     private String realName;
-    private String gender;
     private String phone;
     private String email;
     private LocalDateTime createTime;

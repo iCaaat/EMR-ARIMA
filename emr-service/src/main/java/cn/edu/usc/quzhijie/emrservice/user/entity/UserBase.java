@@ -12,8 +12,6 @@ public class UserBase {
     private String password;
     private String realName;
     private String idCard;
-    private String gender;
-    private LocalDate birthday;
     private String phone;
     private String email;
     private LocalDateTime createTime;

@@ -27,6 +27,7 @@ public class UserController {
      */
     @PostMapping("/register")
     public Result<String> register(@RequestBody @Validated PatientRegisterDTO dto) {
+        dto.setRoleCode("patient");
         return Result.success("注册成功!", userService.register(dto));
     }
 

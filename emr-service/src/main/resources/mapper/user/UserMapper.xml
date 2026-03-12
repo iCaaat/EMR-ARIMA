@@ -28,8 +28,6 @@
             ub.username,
             ub.real_name,
             ub.id_card,
-            ub.gender,
-            ub.birthday,
             ub.phone,
             ub.email,
             ub.create_time,
@@ -49,8 +47,6 @@
             ub.username,
             ub.real_name,
             ub.id_card,
-            ub.gender,
-            ub.birthday,
             ub.phone,
             ub.email,
             ub.create_time,
@@ -75,8 +71,6 @@
         set username = #{username},
             real_name = #{realName},
             id_card = #{idCard},
-            gender = #{gender},
-            birthday = #{birthday},
             phone = #{phone},
             email = #{email},
             update_time = now()
@@ -85,8 +79,8 @@
 
     <!-- 新增用户 -->
     <insert id="insertUserBase" useGeneratedKeys="true" keyProperty="uid">
-        insert into user_base (username, password, real_name, id_card, gender, birthday, phone, email)
-    values (#{username}, #{password}, #{realName}, #{idCard}, #{gender}, #{birthday}, #{phone}, #{email})
+        insert into user_base (username, password, real_name, id_card, phone, email)
+    values (#{username}, #{password}, #{realName}, #{idCard}, #{phone}, #{email})
     </insert>
 
     <!-- 新增用户角色信息 -->

@@ -26,27 +26,12 @@ public class PatientRegisterDTO {
     @Pattern(regexp = "^[1-9]\\d{5}(18|19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])\\d{3}(\\d|X|x)$", message = "身份证号码格式不正确")
     private String idCard;
 
-    @NotNull(message = "性别不能为空")
-    @Pattern(regexp = "^[MFO]$", message = "性别必须是'M'（男）、'F'（女）或'U'（未知）")
-    private String gender;
-
-    @NotNull(message = "出生日期不能为空")
-    private LocalDate birthday;
-
     @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^1\\d{10}$", message = "手机号必须是11位数字")
     private String phone;
 
     @Email(message = "邮箱格式不正确")
     private String email;
-    private String address;
-    private String nationality;
-    private String occupation;
-    private Integer maritalStatus;
-    private String emergencyContact;
-    private String emergencyPhone;
 
-    @NotBlank(message = "角色代码不能为空")
-    @Pattern(regexp = "^(admin|doctor|patient)$", message = "角色编码不存在")
     private String roleCode;
 }

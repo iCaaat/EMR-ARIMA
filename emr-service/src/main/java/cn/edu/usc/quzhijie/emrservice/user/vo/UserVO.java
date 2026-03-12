@@ -11,8 +11,6 @@ public class UserVO {
     private String username;
     private String realName;
     private String idCard;
-    private String gender;
-    private LocalDate birthday;
     private String phone;
     private String email;
     private LocalDateTime createTime;

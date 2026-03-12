@@ -28,6 +28,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             DepartmentVO vo = new DepartmentVO();
             vo.setDepartmentId(department.getDepartmentId());
             vo.setName(department.getName());
+            vo.setDescription(department.getDescription());
             map.put(department.getDepartmentId(), vo);
         }
 
