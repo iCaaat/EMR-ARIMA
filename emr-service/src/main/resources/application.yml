@@ -22,3 +22,7 @@ jwt:
   secret: EUqxSvI4extlwRUeCDNBVq4p6SIp1JSyK7hTXAbvE7M=
   expiration: 900000
   refresh-token-expiration: 604800000
+
+file:
+  base-dir: C:/Users/LuckyBY/Desktop/EMR-ARIMA/EMR-ARIMA-service/emr-files
+  access-url: http://localhost:8080/files
