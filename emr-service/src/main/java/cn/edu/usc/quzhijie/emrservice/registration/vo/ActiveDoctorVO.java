@@ -6,6 +6,7 @@ import lombok.Data;
 public class ActiveDoctorVO {
     private Integer doctorId;
     private Integer departmentId;
+    private Integer scheduleId;
     private String realName;
     private String gender;
     private String doctorTitle;

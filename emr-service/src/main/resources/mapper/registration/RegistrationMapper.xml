@@ -16,7 +16,8 @@
                de.doctor_title,
                de.outpatient_type,
                de.avatar,
-               min(ss.fee) as fee,
+               de.fee,
+               ds.schedule_id,
                sum(ss.max_number) as max_number,
                sum(ss.remain_number) as remain_number
         from doctor_exp de
@@ -25,9 +26,9 @@
         where de.department_id = #{departmentId}
           and de.status = 0
           and ds.work_date = str_to_date(#{workDate}, '%Y-%m-%d')
-        group by de.doctor_id
+        group by de.doctor_id, ds.schedule_id
     </select>
-    <select id="selectDepartmentAndParentById" resultType="SelectDepartmentVO">
+    <select id="selectDepartmentVOById" resultType="SelectDepartmentVO">
         select d.department_id as selectDepartmentId,
             d.name as selectDepartmentName,
             d.description,
@@ -35,5 +36,29 @@
         from department d
         left join department pd on d.parent_id = pd.department_id
         where d.department_id = #{departmentId}
+    </select>
+    <select id="selectScheduleVOById" resultType="SelectScheduleVO">
+        select de.avatar,
+               de.real_name,
+               de.doctor_title,
+               de.specialty,
+               de.description,
+               de.fee,
+               d.name as departmentName,
+               ds.work_date as appointmentDate
+        from doctor_schedule ds
+        join doctor_exp de on ds.doctor_id = de.doctor_id
+        join department d on de.department_id = d.department_id
+        where ds.schedule_id = #{scheduleId}
+        and de.status = 0
+        and ds.status = 0
+    </select>
+    <select id="getPeriodByScheduleId" resultType="PeriodVO">
+        select ss.slot_id,
+               ss.schedule_id,
+               ss.period,
+               ss.remain_number
+        from schedule_slot ss
+        where ss.schedule_id = #{scheduleId}
     </select>
 </mapper>

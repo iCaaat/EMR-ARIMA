@@ -4,10 +4,7 @@ import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorExp;
 import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.DateVO;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.DepartmentVO;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.ActiveDoctorVO;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.SelectDepartmentVO;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -95,6 +92,24 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public SelectDepartmentVO selectDepartmentVOResult(Integer departmentId) {
-        return registrationMapper.selectDepartmentAndParentById(departmentId);
+        return registrationMapper.selectDepartmentVOById(departmentId);
+    }
+
+    @Override
+    public SelectScheduleVO selectScheduleVOResult(Integer scheduleId) {
+        return registrationMapper.selectScheduleVOById(scheduleId);
+    }
+
+    @Override
+    public List<PeriodVO> getPeriodInfo(Integer scheduleId) {
+        List<PeriodVO> list = registrationMapper.getPeriodByScheduleId(scheduleId);
+        for (PeriodVO periodVO : list) {
+            if ("am".equals(periodVO.getPeriod())) {
+                periodVO.setPeriod("上午(A)");
+            } else if ("pm".equals(periodVO.getPeriod())) {
+                periodVO.setPeriod("下午(P)");
+            }
+        }
+        return list;
     }
 }

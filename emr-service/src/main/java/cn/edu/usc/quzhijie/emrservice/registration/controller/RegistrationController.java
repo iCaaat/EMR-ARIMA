@@ -2,10 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.registration.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.DateVO;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.DepartmentVO;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.ActiveDoctorVO;
-import cn.edu.usc.quzhijie.emrservice.registration.vo.SelectDepartmentVO;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,5 +33,15 @@ public class RegistrationController {
     @GetMapping("/departments/{departmentId}")
     public Result<SelectDepartmentVO> selectDepartmentVOResult(@PathVariable Integer departmentId) {
         return Result.success(registrationService.selectDepartmentVOResult(departmentId));
+    }
+
+    @GetMapping("/schedules/{scheduleId}")
+    public Result<SelectScheduleVO> selectScheduleVOResult(@PathVariable Integer scheduleId) {
+        return Result.success(registrationService.selectScheduleVOResult(scheduleId));
+    }
+
+    @GetMapping("/period/{scheduleId}")
+    public Result<List<PeriodVO>> getPeriodInfo(@PathVariable Integer scheduleId) {
+        return Result.success(registrationService.getPeriodInfo(scheduleId));
     }
 }
