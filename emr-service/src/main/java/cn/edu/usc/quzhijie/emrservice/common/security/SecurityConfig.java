@@ -34,7 +34,9 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/auth/refresh",
                                 "/users/register",
-                                "/users/exists")
+                                "/users/exists",
+                                "/files/avatar/**"
+                        )
                         .permitAll()
                         .anyRequest().authenticated()
                 )

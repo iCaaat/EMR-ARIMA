@@ -1,15 +1,15 @@
 package cn.edu.usc.quzhijie.emrservice.registration.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
-import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.DateVO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.DepartmentVO;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.ActiveDoctorVO;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.SelectDepartmentVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,5 +21,20 @@ public class RegistrationController {
     @GetMapping("/departments")
     public Result<List<DepartmentVO>> getDepartment() {
         return Result.success("查询成功", registrationService.getDepartmentInfo());
+    }
+
+    @GetMapping("/dates")
+    public Result<List<DateVO>> getSevenDays() {
+        return Result.success(registrationService.getSevenDays());
+    }
+
+    @GetMapping("/doctors")
+    public Result<List<ActiveDoctorVO>> getActiveDoctors(@RequestParam Integer departmentId, @RequestParam String workDate) {
+        return Result.success(registrationService.getActiveDoctors(departmentId, workDate));
+    }
+
+    @GetMapping("/departments/{departmentId}")
+    public Result<SelectDepartmentVO> selectDepartmentVOResult(@PathVariable Integer departmentId) {
+        return Result.success(registrationService.selectDepartmentVOResult(departmentId));
     }
 }

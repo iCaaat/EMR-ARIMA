@@ -1,21 +1,27 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service.impl;
 
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
+import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorExp;
 import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.DateVO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.DepartmentVO;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.ActiveDoctorVO;
+import cn.edu.usc.quzhijie.emrservice.registration.vo.SelectDepartmentVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.TextStyle;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationMapper registrationMapper;
+    private final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public List<DepartmentVO> getDepartmentInfo() {
@@ -54,4 +60,41 @@ public class RegistrationServiceImpl implements RegistrationService {
         return rootList;
     }
 
+    @Override
+    public List<DateVO> getSevenDays() {
+        List<DateVO> list = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 7; i++) {
+
+            LocalDate date = today.plusDays(i + 1);
+
+            DateVO vo = new DateVO();
+            vo.setDate(date.toString());
+            vo.setMonthDay(date.format(DateTimeFormatter.ofPattern("MM-dd")));
+            vo.setWeek(date.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.CHINA));
+
+            list.add(vo);
+        }
+        return list;
+    }
+
+    @Override
+    public List<ActiveDoctorVO> getActiveDoctors(Integer departmentId, String date) {
+        // 1.查出在岗医生信息
+        List<ActiveDoctorVO> list = registrationMapper.listActiveDoctors(departmentId, date);
+        // 2.字段展示处理
+        for (ActiveDoctorVO activeDoctorVO : list) {
+            if ("normal".equals(activeDoctorVO.getOutpatientType())) {
+                activeDoctorVO.setOutpatientType("普通门诊");
+            } else if ("expert".equals(activeDoctorVO.getOutpatientType())) {
+                activeDoctorVO.setOutpatientType("专家门诊");
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public SelectDepartmentVO selectDepartmentVOResult(Integer departmentId) {
+        return registrationMapper.selectDepartmentAndParentById(departmentId);
+    }
 }
