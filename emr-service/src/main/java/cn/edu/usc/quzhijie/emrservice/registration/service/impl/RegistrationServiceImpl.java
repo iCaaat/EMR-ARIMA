@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service.impl;
 
+import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorExp;
 import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
@@ -105,11 +106,16 @@ public class RegistrationServiceImpl implements RegistrationService {
         List<PeriodVO> list = registrationMapper.getPeriodByScheduleId(scheduleId);
         for (PeriodVO periodVO : list) {
             if ("am".equals(periodVO.getPeriod())) {
-                periodVO.setPeriod("上午(A)");
+                periodVO.setDisplayPeriod("上午(A)");
             } else if ("pm".equals(periodVO.getPeriod())) {
-                periodVO.setPeriod("下午(P)");
+                periodVO.setDisplayPeriod("下午(P)");
             }
         }
         return list;
+    }
+
+    @Override
+    public List<SlotsVO> getSlots(Integer scheduleId, String period) {
+        return registrationMapper.getSlotsByPeriodAndScheduleId(scheduleId, period);
     }
 }

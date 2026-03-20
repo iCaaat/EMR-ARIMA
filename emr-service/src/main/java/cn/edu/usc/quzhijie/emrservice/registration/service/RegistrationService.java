@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service;
 
+import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface RegistrationService {
     SelectScheduleVO selectScheduleVOResult(Integer scheduleId);
 
     List<PeriodVO> getPeriodInfo(Integer scheduleId);
+
+    List<SlotsVO> getSlots(Integer scheduleId, String period);
 }

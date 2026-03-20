@@ -54,11 +54,22 @@
         and ds.status = 0
     </select>
     <select id="getPeriodByScheduleId" resultType="PeriodVO">
+        select ss.period,
+               count(*) as remainNumber
+        from schedule_slot ss
+        where ss.schedule_id = #{scheduleId}
+        and status = 'available'
+        group by period
+    </select>
+    <select id="getSlotsByPeriodAndScheduleId" resultType="SlotsVO">
         select ss.slot_id,
                ss.schedule_id,
                ss.period,
-               ss.remain_number
+               ss.seq_no,
+               ss.display_no,
+               ss.fee,
+               ss.status
         from schedule_slot ss
-        where ss.schedule_id = #{scheduleId}
+        where schedule_id = #{scheduleId} and period = #{period}
     </select>
 </mapper>

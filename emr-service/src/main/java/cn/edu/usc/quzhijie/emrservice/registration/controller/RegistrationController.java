@@ -1,9 +1,11 @@
 package cn.edu.usc.quzhijie.emrservice.registration.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -43,5 +45,11 @@ public class RegistrationController {
     @GetMapping("/period/{scheduleId}")
     public Result<List<PeriodVO>> getPeriodInfo(@PathVariable Integer scheduleId) {
         return Result.success(registrationService.getPeriodInfo(scheduleId));
+    }
+
+    @GetMapping("/slots")
+    public Result<List<SlotsVO>> getSlots(@RequestParam Integer scheduleId,
+                                          @RequestParam String period) {
+        return Result.success(registrationService.getSlots(scheduleId, period));
     }
 }

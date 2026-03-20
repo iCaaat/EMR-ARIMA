@@ -4,8 +4,7 @@ import lombok.Data;
 
 @Data
 public class PeriodVO {
-    private Integer slotId;
-    private Integer scheduleId;
     private String period;
+    private String displayPeriod;
     private Integer remainNumber;
 }
