@@ -1,19 +1,27 @@
-package cn.edu.usc.quzhijie.emrservice.user.vo;
+package cn.edu.usc.quzhijie.emrservice.user.dto;
 
+import cn.edu.usc.quzhijie.emrservice.common.annotation.IdCard;
+import cn.edu.usc.quzhijie.emrservice.common.annotation.Phone;
+import cn.edu.usc.quzhijie.emrservice.common.annotation.RealName;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
-public class PatientDetailVO {
+public class PatientDetailDTO {
     private Integer patientId;
-    private Integer belongingUid;
+    @RealName
     private String realName;
+    @IdCard
     private String idCard;
+    @NotBlank
+    @Phone
+    private String contactPhone;
     private String gender;
     private LocalDate birthday;
-    private String contactPhone;
     private String address;
     private String nationality;
     private String occupation;
@@ -21,10 +29,6 @@ public class PatientDetailVO {
     private String emergencyPhone;
     private String emergencyContact;
     private String insuranceNumber;
-    private String medicalHistory;
-    private String allergies;
     private String relation;
     private String relationDisplay;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
 }

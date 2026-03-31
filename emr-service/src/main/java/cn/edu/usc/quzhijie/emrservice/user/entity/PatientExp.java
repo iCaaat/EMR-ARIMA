@@ -13,6 +13,7 @@ public class PatientExp {
     private String idCard;
     private String gender;
     private LocalDate birthday;
+    private String contactPhone;
     private String address;
     private String nationality;
     private String occupation;

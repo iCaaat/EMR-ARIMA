@@ -1,5 +1,7 @@
 package cn.edu.usc.quzhijie.emrservice.user.service.impl;
 
+import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
+import cn.edu.usc.quzhijie.emrservice.user.dto.PatientDetailDTO;
 import cn.edu.usc.quzhijie.emrservice.user.entity.PatientExp;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.PatientMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.PatientService;
@@ -7,7 +9,9 @@ import cn.edu.usc.quzhijie.emrservice.user.vo.PatientDetailVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientVO;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +43,10 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public PatientDetailVO getPatientDetail(Integer belongingUid, Integer patientId) {
-        PatientExp patientExp = patientMapper.getPatientById(belongingUid, patientId);
+    public PatientDetailVO getPatientDetail(Integer uid, Integer patientId) {
+        PatientExp patientExp = patientMapper.getPatientById(uid, patientId);
         PatientDetailVO patientDetailVO = new PatientDetailVO();
-        patientDetailVO.setPatientId(patientExp.getPatientId());
-        patientDetailVO.setBelongingUid(patientExp.getBelongingUid());
+        BeanUtils.copyProperties(patientExp, patientDetailVO);
         return patientDetailVO;
     }
 
@@ -63,5 +66,48 @@ public class PatientServiceImpl implements PatientService {
     private String maskIdCard(String id) {
         if (id == null || id.length() < 8) return id;
         return id.substring(0, 6) + "**********" + id.substring(id.length() - 2);
+    }
+
+    @Override
+    @Transactional
+    public String updatePatientDetail(Integer uid, PatientDetailDTO dto) {
+        if (dto.getPatientId() == null || dto.getPatientId() <= 0) {
+            throw new BizException("就诊人id不合法");
+        }
+        PatientExp exp = patientMapper.getPatientById(uid, dto.getPatientId());
+        if (exp == null) {
+            throw new BizException("就诊人不存在");
+        }
+        Integer result = patientMapper.updatePatientDetailById(uid, dto);
+        if (result < 1) {
+            throw new BizException("更新就诊人信息失败");
+        }
+        return "更新成功";
+    }
+
+    @Override
+    @Transactional
+    public String addPatient(Integer uid, PatientDetailDTO dto) {
+        if ("self".equals(dto.getRelation())) {
+            throw new BizException("就诊人关系self已经存在");
+        }
+        PatientExp exp = patientMapper.getPatientByIdCard(uid, dto.getIdCard());
+        if (exp != null) {
+            throw new BizException("就诊人已存在");
+        }
+
+        if (StringUtils.isBlank(dto.getRelation())) {
+            dto.setRelation("other");
+        }
+        if (StringUtils.isBlank(dto.getRelationDisplay())) {
+            dto.setRelationDisplay("其他");
+        }
+
+        // 插入数据
+        Integer result = patientMapper.insertPatient(uid, dto);
+        if (result < 1) {
+            throw new BizException("添加就诊人信息失败");
+        }
+        return "添加成功";
     }
 }

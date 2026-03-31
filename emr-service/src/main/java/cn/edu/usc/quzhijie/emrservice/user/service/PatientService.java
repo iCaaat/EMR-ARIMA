@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.user.service;
 
+import cn.edu.usc.quzhijie.emrservice.user.dto.PatientDetailDTO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.PatientDetailVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientVO;
 
@@ -9,4 +10,8 @@ public interface PatientService {
     List<UserPatientVO> getUserPatients(Integer uid);
 
     PatientDetailVO getPatientDetail(Integer uid, Integer patientId);
+
+    String updatePatientDetail(Integer uid, PatientDetailDTO dto);
+
+    String addPatient(Integer uid, PatientDetailDTO dto);
 }
