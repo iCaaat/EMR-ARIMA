@@ -45,8 +45,14 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDetailVO getPatientDetail(Integer uid, Integer patientId) {
         PatientExp patientExp = patientMapper.getPatientById(uid, patientId);
+        if (patientExp == null) {
+            throw new BizException("就诊人不存在");
+        }
         PatientDetailVO patientDetailVO = new PatientDetailVO();
-        BeanUtils.copyProperties(patientExp, patientDetailVO);
+        if (patientExp.getStatus() == 0) {
+            BeanUtils.copyProperties(patientExp, patientDetailVO);
+        }
+
         return patientDetailVO;
     }
 
@@ -75,7 +81,7 @@ public class PatientServiceImpl implements PatientService {
             throw new BizException("就诊人id不合法");
         }
         PatientExp exp = patientMapper.getPatientById(uid, dto.getPatientId());
-        if (exp == null) {
+        if (exp == null || exp.getStatus() == 1) {
             throw new BizException("就诊人不存在");
         }
         Integer result = patientMapper.updatePatientDetailById(uid, dto);
@@ -92,7 +98,7 @@ public class PatientServiceImpl implements PatientService {
             throw new BizException("就诊人关系self已经存在");
         }
         PatientExp exp = patientMapper.getPatientByIdCard(uid, dto.getIdCard());
-        if (exp != null) {
+        if (exp != null && exp.getStatus() == 0) {
             throw new BizException("就诊人已存在");
         }
 
@@ -103,11 +109,37 @@ public class PatientServiceImpl implements PatientService {
             dto.setRelationDisplay("其他");
         }
 
-        // 插入数据
-        Integer result = patientMapper.insertPatient(uid, dto);
-        if (result < 1) {
-            throw new BizException("添加就诊人信息失败");
+        if (exp != null && exp.getStatus() == 1) {
+            // 更新数据
+            dto.setPatientId(exp.getPatientId());
+            Integer result = patientMapper.updatePatientDetailStatusById(uid, dto);
+            if (result < 1) {
+                throw new BizException("添加就诊人信息失败");
+            }
+        } else {
+            // 插入数据
+            Integer result = patientMapper.insertPatient(uid, dto);
+            if (result < 1) {
+                throw new BizException("添加就诊人信息失败");
+            }
         }
+
+
         return "添加成功";
+    }
+
+    @Override
+    @Transactional
+    public String deleteUserPatient(Integer uid, Integer patientId) {
+        PatientExp patientExp = patientMapper.getPatientById(uid, patientId);
+        if (patientExp == null) {
+            throw new BizException("就诊人不存在");
+        }
+        if ("self".equals(patientExp.getRelation())) {
+            throw new BizException("无法删除此就诊人信息");
+        }
+
+        Integer res = patientMapper.updatePatientStatusById(uid, patientId, 1);
+        return "删除成功";
     }
 }

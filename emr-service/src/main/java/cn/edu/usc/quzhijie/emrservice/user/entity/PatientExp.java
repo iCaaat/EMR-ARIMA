@@ -27,4 +27,5 @@ public class PatientExp {
     private String relationDisplay;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private Integer status;
 }

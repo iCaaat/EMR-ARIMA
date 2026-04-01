@@ -49,4 +49,12 @@ public class PatientController {
         Integer uid = (Integer) claims.get("uid");
         return Result.success(patientService.addPatient(uid, dto));
     }
+
+    @DeleteMapping("/{patientId}")
+    public Result<String> deleteUserPatient(Authentication authentication,
+                                            @PathVariable Integer patientId) {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+        return Result.success(patientService.deleteUserPatient(uid, patientId));
+    }
 }

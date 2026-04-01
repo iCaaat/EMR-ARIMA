@@ -6,6 +6,7 @@
         select *
         from patient_exp
         where belonging_uid = #{uid}
+        and status = 0
     </select>
 
     <select id="getPatientById" resultType="PatientExp">
@@ -41,6 +42,37 @@
             update_time = now()
         where belonging_uid = #{belongingUid}
         and patient_id = #{patient.patientId}
+        and status = 0
+    </update>
+
+    <update id="updatePatientDetailStatusById">
+        update patient_exp
+        set real_name = #{patient.realName},
+            id_card = #{patient.idCard},
+            gender = #{patient.gender},
+            birthday = #{patient.birthday},
+            contact_phone = #{patient.contactPhone},
+            address = #{patient.address},
+            nationality = #{patient.nationality},
+            occupation = #{patient.occupation},
+            marital_status = #{patient.maritalStatus},
+            emergency_phone = #{patient.emergencyPhone},
+            emergency_contact = #{patient.emergencyContact},
+            insurance_number = #{patient.insuranceNumber},
+            relation = #{patient.relation},
+            relation_display = #{patient.relationDisplay},
+            update_time = now(),
+            status = 0
+        where belonging_uid = #{belongingUid}
+          and patient_id = #{patient.patientId}
+          and status = 1
+    </update>
+
+    <update id="updatePatientStatusById">
+        update patient_exp
+        set status = #{status}
+        where belonging_uid = #{belongingUid}
+        and patient_id = #{patientId}
     </update>
 
     <insert id="insertPatient">
@@ -61,4 +93,10 @@
                                  relation_display
         ) values (#{belongingUid}, #{patient.realName}, #{patient.idCard}, #{patient.gender}, #{patient.birthday}, #{patient.contactPhone}, #{patient.address}, #{patient.nationality}, #{patient.occupation}, #{patient.maritalStatus}, #{patient.emergencyPhone}, #{patient.emergencyContact}, #{patient.insuranceNumber}, #{patient.relation}, #{patient.relationDisplay})
     </insert>
+
+    <delete id="deletePatientById">
+        delete from patient_exp
+        where belonging_uid = #{belongingUid}
+        and patient_id = #{patientId}
+    </delete>
 </mapper>

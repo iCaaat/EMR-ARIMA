@@ -14,4 +14,6 @@ public interface PatientService {
     String updatePatientDetail(Integer uid, PatientDetailDTO dto);
 
     String addPatient(Integer uid, PatientDetailDTO dto);
+
+    String deleteUserPatient(Integer uid, Integer patientId);
 }
