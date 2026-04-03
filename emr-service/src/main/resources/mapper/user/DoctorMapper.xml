@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.usc.quzhijie.emrservice.user.mapper.DoctorMapper">
+    <select id="selectDoctorsOnWorkByDepartmentId" resultType="DoctorExp">
+        select * from doctor_exp where department_id = #{departmentId} and status = 0;
+    </select>
+
+    <select id="getDoctorById" resultType="DoctorExp">
+        select * from doctor_exp where doctor_id = #{doctorId} and status = 0;
+    </select>
+</mapper>

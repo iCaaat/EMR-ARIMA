@@ -6,6 +6,7 @@ import cn.edu.usc.quzhijie.emrservice.user.entity.PatientExp;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.PatientMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.PatientService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.PatientDetailVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientSimpleVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientVO;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,22 @@ public class PatientServiceImpl implements PatientService {
             userPatientVO.setRealNameSecret(name);
             userPatientVO.setIdCardSecret(idCard);
             list.add(userPatientVO);
+        }
+        return list;
+    }
+
+    @Override
+    public List<UserPatientSimpleVO> getUserPatientsSimple(Integer uid) {
+        List<PatientExp> patients = patientMapper.getPatientsByUid(uid);
+
+        List<UserPatientSimpleVO> list = new ArrayList<>();
+        for (PatientExp patient : patients) {
+            String idCard = maskIdCard(patient.getIdCard());
+            UserPatientSimpleVO vo = new UserPatientSimpleVO();
+            vo.setPatientId(patient.getPatientId());
+            vo.setRealName(patient.getRealName());
+            vo.setIdCardSecret(idCard);
+            list.add(vo);
         }
         return list;
     }

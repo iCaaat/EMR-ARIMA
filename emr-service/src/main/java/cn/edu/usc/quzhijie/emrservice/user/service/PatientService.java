@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.user.service;
 
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientDetailDTO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.PatientDetailVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientSimpleVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientVO;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface PatientService {
     String addPatient(Integer uid, PatientDetailDTO dto);
 
     String deleteUserPatient(Integer uid, Integer patientId);
+
+    List<UserPatientSimpleVO> getUserPatientsSimple(Integer uid);
 }

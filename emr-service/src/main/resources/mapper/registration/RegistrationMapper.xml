@@ -5,9 +5,6 @@
     <select id="listDepartment" resultType="Department">
         select * from department order by department_id;
     </select>
-    <select id="selectDoctorsOnWorkByDepartmentId" resultType="DoctorExp">
-        select * from doctor_exp where department_id = #{departmentId} and status = 0;
-    </select>
     <select id="listActiveDoctors" resultType="ActiveDoctorVO">
         select de.doctor_id,
                de.department_id,
@@ -18,11 +15,12 @@
                de.avatar,
                de.fee,
                ds.schedule_id,
-               sum(ss.max_number) as max_number,
-               sum(ss.remain_number) as remain_number
+               ds.max_number,
+               count(ss.slot_id) as remain_number
         from doctor_exp de
         join doctor_schedule ds on de.doctor_id = ds.doctor_id
         join schedule_slot ss on ds.schedule_id = ss.schedule_id
+        and ss.status = 'available'
         where de.department_id = #{departmentId}
           and de.status = 0
           and ds.work_date = str_to_date(#{workDate}, '%Y-%m-%d')
@@ -72,4 +70,44 @@
         from schedule_slot ss
         where schedule_id = #{scheduleId} and period = #{period}
     </select>
+    <select id="getSlotById" resultType="ScheduleSlot">
+        select *
+        from schedule_slot
+        where slot_id = #{slotId}
+    </select>
+    <select id="getScheduleById" resultType="DoctorSchedule">
+        select *
+        from doctor_schedule
+        where schedule_id = #{scheduleId}
+    </select>
+    <select id="getDepartmentById" resultType="Department">
+        select *
+        from department
+        where department_id = #{departmentId}
+    </select>
+    <select id="getAppointmentBySlotId" resultType="Appointment">
+        select *
+        from appointment
+        where slot_id = #{slotId}
+        and patient_id = #{patientId}
+        and department_id = #{departmentId}
+        and status = 0
+    </select>
+
+    <insert id="insertAppointment">
+        insert into appointment (patient_id,
+                                 doctor_id,
+                                 doctor_name,
+                                 department_id,
+                                 department_name,
+                                 slot_id,
+                                 visit_date,
+                                 period,
+                                 queue_number,
+                                 fee,
+                                 contact_phone,
+                                 payee_code,
+                                 status)
+        values (#{patientId}, #{doctorId}, #{doctorName}, #{departmentId}, #{departmentName}, #{slotId}, #{visitDate}, #{period}, #{queueNumber}, #{fee}, #{contactPhone}, #{payeeCode}, 0)
+    </insert>
 </mapper>

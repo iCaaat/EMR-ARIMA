@@ -1,17 +1,22 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service.impl;
 
-import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
+import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
+import cn.edu.usc.quzhijie.emrservice.registration.entity.Appointment;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
-import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorExp;
+import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorSchedule;
+import cn.edu.usc.quzhijie.emrservice.registration.entity.ScheduleSlot;
 import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
+import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
+import cn.edu.usc.quzhijie.emrservice.user.mapper.DoctorMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.util.*;
 
@@ -19,6 +24,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationMapper registrationMapper;
+    private final DoctorMapper doctorMapper;
     private final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
@@ -117,5 +123,45 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public List<SlotsVO> getSlots(Integer scheduleId, String period) {
         return registrationMapper.getSlotsByPeriodAndScheduleId(scheduleId, period);
+    }
+
+    @Override
+    @Transactional
+    public Integer appointRegistration(AppointmentDTO dto) {
+        DoctorSchedule schedule = registrationMapper.getScheduleById(dto.getScheduleId());
+        if (schedule == null || schedule.getStatus() != 0) {
+            throw new BizException("所选在岗医生信息出错");
+        }
+
+        DoctorExp doctor = doctorMapper.getDoctorById(schedule.getDoctorId());
+        dto.setDoctorId(doctor.getDoctorId());
+        dto.setDoctorName(doctor.getRealName());
+        Department department = registrationMapper.getDepartmentById(schedule.getDepartmentId());
+        dto.setDepartmentId(department.getDepartmentId());
+        dto.setDepartmentName(department.getName());
+
+        ScheduleSlot slot = registrationMapper.getSlotById(dto.getSlotId());
+        if (slot == null) {
+            throw new BizException("所选择号源不存在");
+        }
+        if (!"available".equals(slot.getStatus())) {
+            throw new BizException("所选号源无法预约");
+        }
+
+        dto.setFee(slot.getFee());
+        dto.setPeriod(slot.getPeriod());
+        dto.setQueueNumber(slot.getSeqNo());
+        dto.setVisitDate(slot.getVisitDate());
+
+        Appointment appointment = registrationMapper.getAppointmentBySlotId(dto);
+        if (appointment != null) {
+            throw new BizException("所选号源已被预约或就诊人已预约了同一时间段的号源");
+        }
+        Integer result = registrationMapper.insertAppointment(dto);
+        if (result != 1) {
+            throw new BizException("预约失败");
+        }
+
+        return result;
     }
 }

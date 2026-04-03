@@ -1,6 +1,7 @@
 package cn.edu.usc.quzhijie.emrservice.registration.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
@@ -51,5 +52,10 @@ public class RegistrationController {
     public Result<List<SlotsVO>> getSlots(@RequestParam Integer scheduleId,
                                           @RequestParam String period) {
         return Result.success(registrationService.getSlots(scheduleId, period));
+    }
+
+    @PostMapping("/appoint")
+    public Result<Integer> appointRegistration(@RequestBody @Validated AppointmentDTO dto) {
+        return Result.success(registrationService.appointRegistration(dto));
     }
 }
