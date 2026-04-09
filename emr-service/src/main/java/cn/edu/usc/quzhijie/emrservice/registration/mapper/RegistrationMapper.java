@@ -37,4 +37,6 @@ public interface RegistrationMapper {
     Department getDepartmentById(@Param("departmentId") Integer departmentId);
 
     Appointment getAppointmentBySlotId(AppointmentDTO dto);
+
+    List<UserAppointmentVO> listUserAppointments(@Param("belongingUid") Integer uid);
 }

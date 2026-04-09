@@ -96,6 +96,7 @@
 
     <insert id="insertAppointment">
         insert into appointment (patient_id,
+                                 patient_name,
                                  doctor_id,
                                  doctor_name,
                                  department_id,
@@ -104,10 +105,50 @@
                                  visit_date,
                                  period,
                                  queue_number,
+                                 display_no,
                                  fee,
                                  contact_phone,
                                  payee_code,
                                  status)
-        values (#{patientId}, #{doctorId}, #{doctorName}, #{departmentId}, #{departmentName}, #{slotId}, #{visitDate}, #{period}, #{queueNumber}, #{fee}, #{contactPhone}, #{payeeCode}, 0)
+        select pe.patient_id,
+               pe.real_name as patient_name,
+               #{doctorId},
+               #{doctorName},
+               #{departmentId},
+               #{departmentName},
+               ss.slot_id,
+               #{visitDate},
+               #{period},
+               #{queueNumber},
+               ss.display_no,
+               #{fee},
+               #{contactPhone},
+               #{payeeCode},
+               0
+        from patient_exp pe
+        join schedule_slot ss on ss.slot_id = #{slotId}
+        where pe.patient_id = #{patientId}
     </insert>
+
+    <select id="listUserAppointments" resultType="UserAppointmentVO">
+        select a.appointment_id,
+               a.patient_id,
+               a.patient_name,
+               a.doctor_id,
+               a.doctor_name,
+               a.department_id,
+               a.department_name,
+               a.slot_id,
+               a.visit_date,
+               a.period,
+               a.display_no,
+               a.fee,
+               a.contact_phone,
+               a.payee_code,
+               a.status
+        from appointment a
+                 join patient_exp pe on a.patient_id = pe.patient_id
+        where pe.belonging_uid = #{belongingUid}
+        order by a.visit_date desc, a.display_no
+    </select>
 </mapper>

@@ -164,4 +164,28 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         return result;
     }
+
+    @Override
+    public List<UserAppointmentVO> getUserAppointments(Integer uid) {
+        List<UserAppointmentVO> list = registrationMapper.listUserAppointments(uid);
+        for (UserAppointmentVO userAppointmentVO : list) {
+            if (userAppointmentVO.getStatus() == 0) {
+                userAppointmentVO.setDisplayStatus("待就诊");
+            } else if (userAppointmentVO.getStatus() == 1) {
+                userAppointmentVO.setDisplayStatus("就诊中");
+            } else if (userAppointmentVO.getStatus() == 2) {
+                userAppointmentVO.setDisplayStatus("已完成");
+            } else if (userAppointmentVO.getStatus() == 3) {
+                userAppointmentVO.setDisplayStatus("已取消");
+            }
+
+            if ("am".equals(userAppointmentVO.getPeriod())) {
+                userAppointmentVO.setDisplayPeriod("上午(A)");
+            } else if ("pm".equals(userAppointmentVO.getPeriod())) {
+                userAppointmentVO.setDisplayPeriod("下午(P)");
+            }
+        }
+
+        return list;
+    }
 }

@@ -5,7 +5,9 @@ import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,5 +59,12 @@ public class RegistrationController {
     @PostMapping("/appoint")
     public Result<Integer> appointRegistration(@RequestBody @Validated AppointmentDTO dto) {
         return Result.success(registrationService.appointRegistration(dto));
+    }
+
+    @GetMapping("/appoint")
+    public Result<List<UserAppointmentVO>> getUserAppointments(Authentication authentication) {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+        return Result.success(registrationService.getUserAppointments(uid));
     }
 }

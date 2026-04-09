@@ -22,4 +22,6 @@ public interface RegistrationService {
     List<SlotsVO> getSlots(Integer scheduleId, String period);
 
     Integer appointRegistration(AppointmentDTO dto);
+
+    List<UserAppointmentVO> getUserAppointments(Integer uid);
 }
