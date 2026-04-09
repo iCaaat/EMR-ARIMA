@@ -12,6 +12,7 @@ import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.AuthService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.MenuVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
 import io.jsonwebtoken.Claims;
 import io.micrometer.common.util.StringUtils;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -145,5 +147,10 @@ public class AuthServiceImpl implements AuthService {
         String jti = (String) claims.getId();
         redisService.delete("jwt:refresh:" + jti);
         return "已退出登录";
+    }
+
+    @Override
+    public List<MenuVO> getMenu(String roleCode) {
+        return userMapper.listMenusByRoleCode(roleCode);
     }
 }

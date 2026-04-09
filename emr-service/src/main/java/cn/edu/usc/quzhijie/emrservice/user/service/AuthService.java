@@ -2,7 +2,10 @@ package cn.edu.usc.quzhijie.emrservice.user.service;
 
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.MenuVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
+
+import java.util.List;
 
 public interface AuthService {
     RefreshVO refreshToken(String refreshToken);
@@ -15,4 +18,6 @@ public interface AuthService {
     LoginVO login(UserLoginDTO dto);
 
     String logout(String refreshToken);
+
+    List<MenuVO> getMenu(String roleCode);
 }

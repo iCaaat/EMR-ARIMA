@@ -97,4 +97,15 @@
     <select id="checkRealNameAndIdCardExists" resultType="boolean">
         select count(*) > 0 from user_base where real_name = #{realName} and id_card = #{idCard}
     </select>
+
+    <select id="listMenusByRoleCode" resultType="MenuVO">
+        select sm.id, sm.name, sm.path, sm.icon, sm.role_code, sm.module
+        from sys_menu sm
+        where sm.role_code = #{roleCode}
+    </select>
+
+    <insert id="insertPatient">
+        insert into patient_exp (belonging_uid, real_name, id_card, gender, birthday, contact_phone, relation, relation_display)
+        values (#{belongingUid}, #{patient.realName}, #{patient.idCard}, #{patient.gender}, #{patient.birthday}, #{patient.phone}, 'self', '本人')
+    </insert>
 </mapper>

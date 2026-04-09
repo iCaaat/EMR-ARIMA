@@ -21,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +73,14 @@ public class UserServiceImpl implements UserService {
         userRole.setUid(uid);
         userRole.setRoleId(roleId);
         userMapper.insertUserRole(userRole);
+
+        // 4.插入默认就诊人信息
+        // 身份证计算出生日期和性别
+        String gender = idCard.charAt(idCard.length() - 2) % 2 == 0 ? "F" : "M";
+        LocalDate birthday = LocalDate.parse(idCard.substring(6, 14), DateTimeFormatter.ofPattern("yyyyMMdd"));
+        dto.setGender(gender);
+        dto.setBirthday(birthday);
+        userMapper.insertPatient(uid, dto);
 
         return "注册成功";
     }

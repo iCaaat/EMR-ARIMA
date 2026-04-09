@@ -23,6 +23,9 @@ public class PatientRegisterDTO {
     @IdCard
     private String idCard;
 
+    private String gender;
+    private LocalDate birthday;
+
     @NotBlank
     @Phone
     private String phone;

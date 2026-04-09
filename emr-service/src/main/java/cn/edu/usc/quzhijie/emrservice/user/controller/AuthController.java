@@ -8,6 +8,7 @@ import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.AuthService;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.MenuVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,5 +45,12 @@ public class AuthController {
     @DeleteMapping("/logout")
     public Result<String> logout(@RequestParam @NotBlank(message = "refresh token cannot be empty") String refreshToken) {
         return Result.success(authService.logout(refreshToken));
+    }
+
+    @GetMapping("/menu")
+    public Result<List<MenuVO>> getMenu(Authentication authentication) {
+        Claims claims = (Claims) authentication.getDetails();
+        String roleCode = (String) claims.get("role");
+        return Result.success(authService.getMenu(roleCode));
     }
 }

@@ -1,12 +1,16 @@
 package cn.edu.usc.quzhijie.emrservice.user.mapper;
 
+import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
+import cn.edu.usc.quzhijie.emrservice.user.vo.MenuVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -42,4 +46,8 @@ public interface UserMapper {
     Integer insertUserRole(UserRole userRole);
 
     Integer updateUserByUid(UpdateUserDTO dto);
+
+    List<MenuVO> listMenusByRoleCode(String roleCode);
+
+    Integer insertPatient(@Param("belongingUid") Integer uid, @Param("patient") PatientRegisterDTO dto);
 }
