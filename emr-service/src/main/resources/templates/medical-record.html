@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body{
+            font-family: SimSun;
+        }
+
+        .title{
+            text-align:center;
+            font-size:20px;
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="title">
+    病历报告
+</div>
+
+<p>姓名：<span th:text="${name}"></span></p>
+<p>年龄：<span th:text="${age}"></span></p>
+<p>诊断：<span th:text="${diagnosis}"></span></p>
+
+</body>
+</html>
