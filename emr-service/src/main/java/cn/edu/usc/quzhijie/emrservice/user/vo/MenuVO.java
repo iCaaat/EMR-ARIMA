@@ -10,5 +10,6 @@ public class MenuVO {
     private String icon;
     private String roleCode;
     private String module;
+    private String moduleName;
     private String sort;
 }

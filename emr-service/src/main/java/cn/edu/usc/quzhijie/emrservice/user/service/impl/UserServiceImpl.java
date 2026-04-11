@@ -2,28 +2,31 @@ package cn.edu.usc.quzhijie.emrservice.user.service.impl;
 
 
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
+import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.converter.UserBaseConverter;
-import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
+import cn.edu.usc.quzhijie.emrservice.user.dto.*;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
+import cn.edu.usc.quzhijie.emrservice.user.util.InfoUtils;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -138,5 +141,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean checkUsernameExists(String username) {
         return userMapper.checkUsernameExists(username);
+    }
+
+    @Override
+    public PageResult<UsersVO> getUsers(UsersDTO dto) {
+        Integer pageNum = dto.getPageNum();
+        Integer pageSize = dto.getPageSize();
+
+        Long total = userMapper.countUserByCondition(dto);
+        if (total == 0) {
+            return new PageResult<>(0L, pageNum, pageSize, List.of());
+        }
+        List<UsersVO> users = userMapper.listUserByCondition(dto);
+
+        for (UsersVO user : users) {
+            String realNameSecret = InfoUtils.maskName(user.getRealName());
+            String idCardSecret = InfoUtils.maskIdCard(user.getIdCard());
+            user.setRealNameSecret(realNameSecret);
+            user.setIdCardSecret(idCardSecret);
+
+            if (!StringUtils.hasText(user.getEmail())) {
+                user.setEmail("未填写");
+            }
+        }
+
+        return new PageResult<>(total, pageNum, pageSize, users);
     }
 }

@@ -1,20 +1,22 @@
 package cn.edu.usc.quzhijie.emrservice.user.controller;
 
+import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
-import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
+import cn.edu.usc.quzhijie.emrservice.user.dto.*;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -76,4 +78,9 @@ public class UserController {
         return Result.success(userService.updateUserInfo(dto));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/search")
+    public Result<PageResult<UsersVO>> getUsers(@RequestBody UsersDTO dto) {
+        return Result.success(userService.getUsers(dto));
+    }
 }

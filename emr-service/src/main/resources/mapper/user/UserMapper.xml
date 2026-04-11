@@ -99,7 +99,7 @@
     </select>
 
     <select id="listMenusByRoleCode" resultType="MenuVO">
-        select sm.id, sm.name, sm.path, sm.icon, sm.role_code, sm.module
+        select sm.id, sm.name, sm.path, sm.icon, sm.role_code, sm.module, sm.module_name
         from sys_menu sm
         where sm.role_code = #{roleCode}
     </select>
@@ -108,4 +108,93 @@
         insert into patient_exp (belonging_uid, real_name, id_card, gender, birthday, contact_phone, relation, relation_display)
         values (#{belongingUid}, #{patient.realName}, #{patient.idCard}, #{patient.gender}, #{patient.birthday}, #{patient.phone}, 'self', '本人')
     </insert>
+
+    <select id="listUserByCondition" resultType="UsersVO">
+        select ub.uid,
+            ub.username,
+            ub.real_name,
+            ub.id_card,
+            ub.phone,
+            ub.email,
+            ub.create_time,
+            ub.update_time,
+            r.role_name,
+            r.role_code
+        from user_base ub
+        left join user_role ur on ub.uid = ur.uid
+        left join role r on r.role_id = ur.role_id
+        <where>
+            <if test="username != null and username != ''">
+                and ub.username like concat('%', #{username}, '%')
+            </if>
+            <if test="realName != null and realName != ''">
+                and ub.real_name like concat('%', #{realName}, '%')
+            </if>
+            <if test="idCard != null and idCard != ''">
+                and ub.id_card like concat('%', #{idCard}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and ub.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                and ub.email like concat('%', #{email}, '%')
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                and r.role_code = #{roleCode}
+            </if>
+            <if test="createTimeBegin != null">
+                and ub.create_time &gt;= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd != null">
+                and ub.create_time &lt;= #{createTimeEnd}
+            </if>
+            <if test="updateTimeBegin != null">
+                and ub.update_time &gt;= #{updateTimeBegin}
+            </if>
+            <if test="updateTimeEnd != null">
+                and ub.update_time &lt;= #{updateTimeEnd}
+            </if>
+        </where>
+        order by ub.create_time desc
+
+        LIMIT #{offset}, #{pageSize}
+    </select>
+    <select id="countUserByCondition" resultType="long">
+        select count(*)
+        from user_base ub
+        left join user_role ur on ub.uid = ur.uid
+        left join role r on r.role_id = ur.role_id
+        <where>
+            <if test="username != null and username != ''">
+                and ub.username like concat('%', #{username}, '%')
+            </if>
+            <if test="realName != null and realName != ''">
+                and ub.real_name like concat('%', #{realName}, '%')
+            </if>
+            <if test="idCard != null and idCard != ''">
+                and ub.id_card like concat('%', #{idCard}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and ub.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                and ub.email like concat('%', #{email}, '%')
+            </if>
+            <if test="roleCode != null and roleCode != ''">
+                and r.role_code = #{roleCode}
+            </if>
+            <if test="createTimeBegin != null">
+                and ub.create_time &gt;= #{createTimeBegin}
+            </if>
+            <if test="createTimeEnd != null">
+                and ub.create_time &lt;= #{createTimeEnd}
+            </if>
+            <if test="updateTimeBegin != null">
+                and ub.update_time &gt;= #{updateTimeBegin}
+            </if>
+            <if test="updateTimeEnd != null">
+                and ub.update_time &lt;= #{updateTimeEnd}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -1,11 +1,12 @@
 package cn.edu.usc.quzhijie.emrservice.user.service;
 
-import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserChangePasswordDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
+import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
+import cn.edu.usc.quzhijie.emrservice.user.dto.*;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -27,4 +28,6 @@ public interface UserService {
     Boolean checkUsernameExists(String username);
 
     String updateUserInfo(UpdateUserDTO dto);
+
+    PageResult<UsersVO> getUsers(UsersDTO dto);
 }
