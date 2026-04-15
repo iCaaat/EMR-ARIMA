@@ -2,23 +2,19 @@ package cn.edu.usc.quzhijie.emrservice.user.service.impl;
 
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.common.exception.InvalidTokenException;
-import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.common.service.RedisService;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.converter.UserBaseConverter;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UserLoginDTO;
-import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
-import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
+import cn.edu.usc.quzhijie.emrservice.common.entity.Role;
+import cn.edu.usc.quzhijie.emrservice.common.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.AuthService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.MenuVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.RefreshVO;
 import io.jsonwebtoken.Claims;
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

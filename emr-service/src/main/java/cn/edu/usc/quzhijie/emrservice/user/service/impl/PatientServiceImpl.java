@@ -2,7 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.user.service.impl;
 
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientDetailDTO;
-import cn.edu.usc.quzhijie.emrservice.user.entity.PatientExp;
+import cn.edu.usc.quzhijie.emrservice.common.entity.PatientExp;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.PatientMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.PatientService;
 import cn.edu.usc.quzhijie.emrservice.user.util.InfoUtils;

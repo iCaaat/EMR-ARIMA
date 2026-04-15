@@ -225,4 +225,77 @@
         from doctor_exp
         where doctor_id = #{doctorId}
     </select>
+
+    <select id="countDoctorSimpleByCondition" resultType="long">
+        <if test="departmentId != null">
+            WITH RECURSIVE dept_tree AS (
+            SELECT department_id
+            FROM department
+            where department_id = #{departmentId}
+
+            UNION ALL
+
+            SELECT d.department_id
+            FROM department d
+            INNER JOIN dept_tree dt ON d.parent_id = dt.department_id
+            )
+        </if>
+
+        select count(*)
+        from doctor_exp
+        <where>
+            <if test="departmentId != null">
+                department_id IN (
+                SELECT department_id FROM dept_tree
+                )
+            </if>
+            <if test="doctorName != null and doctorName != ''">
+                and real_name like concat('%', #{doctorName}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="listDoctorSimpleByCondition" resultType="DoctorSimpleVO">
+        <if test="departmentId != null">
+            WITH RECURSIVE dept_tree AS (
+            SELECT department_id, name
+            FROM department
+            where department_id = #{departmentId}
+
+            UNION ALL
+
+            SELECT d.department_id, d.name
+            FROM department d
+            INNER JOIN dept_tree dt ON d.parent_id = dt.department_id
+            )
+        </if>
+
+        SELECT d.name as departmentName, de.doctor_id, de.real_name as doctorName, de.doctor_title
+        FROM doctor_exp de
+        left join department d on de.department_id = d.department_id
+        <where>
+            <if test="departmentId != null">
+                de.department_id IN (
+                SELECT department_id FROM dept_tree
+                )
+            </if>
+            <if test="doctorName != null and doctorName != ''">
+                and de.real_name like concat('%', #{doctorName}, '%')
+            </if>
+        </where>
+        ORDER BY doctor_id
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectDoctorByIds" resultType="DoctorExp">
+        select *
+        from doctor_exp
+        where doctor_id in
+        <foreach collection="list"
+                 item="id"
+                 open="("
+                 separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

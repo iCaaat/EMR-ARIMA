@@ -4,10 +4,7 @@ import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.user.dto.*;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
-import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
-import cn.edu.usc.quzhijie.emrservice.user.vo.RegisterDoctorVO;
-import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
-import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.*;
 import io.jsonwebtoken.Claims;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -92,5 +89,11 @@ public class UserController {
         RegisterDoctorVO vo = userService.registerDoctor(dto);
         String doctorName = vo.getRealName();
         return Result.success("医生：" + doctorName + "，注册成功!", vo);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/doctor")
+    public Result<PageResult<DoctorSimpleVO>> getDoctorsSimple(DoctorSimpleDTO dto) {
+        return Result.success(userService.getDoctorsSimple(dto));
     }
 }

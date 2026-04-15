@@ -1,4 +1,4 @@
-package cn.edu.usc.quzhijie.emrservice.registration.entity;
+package cn.edu.usc.quzhijie.emrservice.common.entity;
 
 import lombok.Data;
 

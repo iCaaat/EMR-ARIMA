@@ -44,4 +44,44 @@
         order by ds.work_date desc
         limit #{offset}, #{pageSize}
     </select>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="scheduleId">
+
+        INSERT INTO doctor_schedule (
+        doctor_id,
+        department_id,
+        work_date,
+        am_start_time,
+        am_end_time,
+        pm_start_time,
+        pm_end_time,
+        interval_minute,
+        max_number,
+        status,
+        create_time
+        )
+
+        <foreach collection="list"
+                 item="item"
+                 separator="UNION ALL">
+
+            SELECT
+            #{item.doctorId},
+            d.department_id,
+            #{item.workDate},
+            #{item.amStartTime},
+            #{item.amEndTime},
+            #{item.pmStartTime},
+            #{item.pmEndTime},
+            #{item.intervalMinute},
+            #{item.maxNumber},
+            0,
+            now()
+
+            FROM doctor_exp d
+            WHERE d.doctor_id = #{item.doctorId}
+
+        </foreach>
+
+    </insert>
 </mapper>

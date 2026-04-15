@@ -2,13 +2,11 @@ package cn.edu.usc.quzhijie.emrservice.registration.mapper;
 
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
-import cn.edu.usc.quzhijie.emrservice.registration.entity.Appointment;
-import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
-import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
-import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorSchedule;
-import cn.edu.usc.quzhijie.emrservice.registration.entity.ScheduleSlot;
+import cn.edu.usc.quzhijie.emrservice.common.entity.Appointment;
+import cn.edu.usc.quzhijie.emrservice.common.entity.Department;
+import cn.edu.usc.quzhijie.emrservice.common.entity.DoctorSchedule;
+import cn.edu.usc.quzhijie.emrservice.common.entity.ScheduleSlot;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
-import jakarta.validation.constraints.NotNull;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

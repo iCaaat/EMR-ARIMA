@@ -1,8 +1,7 @@
 package cn.edu.usc.quzhijie.emrservice.user.mapper;
 
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientDetailDTO;
-import cn.edu.usc.quzhijie.emrservice.user.entity.PatientExp;
-import cn.edu.usc.quzhijie.emrservice.user.vo.PatientDetailVO;
+import cn.edu.usc.quzhijie.emrservice.common.entity.PatientExp;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

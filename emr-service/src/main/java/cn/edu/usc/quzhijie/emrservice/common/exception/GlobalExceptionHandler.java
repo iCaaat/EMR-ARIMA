@@ -4,6 +4,7 @@ import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import io.lettuce.core.RedisConnectionException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,6 +97,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(Result.fail(403, "权限不足"));
+    }
+
+    // 违反数据库唯一索引
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<Result<?>> handleDuplicateKeyException(
+            DuplicateKeyException e
+    ) {
+
+        String msg = e.getMessage();
+
+        if (msg != null && msg.contains("uk_schedule_seq")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Result.fail(400, "已存在重复号源"));
+        }
+        if (msg != null && msg.contains("uk_doctor_date")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(Result.fail(400, "该医生排班信息有重复"));
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Result.fail(400, "数据重复"));
     }
 
     // 处理其他未知异常

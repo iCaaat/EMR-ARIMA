@@ -1,19 +1,18 @@
 package cn.edu.usc.quzhijie.emrservice.user.mapper;
 
-import cn.edu.usc.quzhijie.emrservice.user.dto.DoctorRegisterDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
-import cn.edu.usc.quzhijie.emrservice.user.dto.UsersDTO;
-import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
-import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
-import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
-import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
+import cn.edu.usc.quzhijie.emrservice.user.dto.*;
+import cn.edu.usc.quzhijie.emrservice.common.entity.DoctorExp;
+import cn.edu.usc.quzhijie.emrservice.common.entity.Role;
+import cn.edu.usc.quzhijie.emrservice.common.entity.UserBase;
+import cn.edu.usc.quzhijie.emrservice.common.entity.UserRole;
+import cn.edu.usc.quzhijie.emrservice.user.vo.DoctorSimpleVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.MenuVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 @Mapper
@@ -61,4 +60,9 @@ public interface UserMapper {
     Integer insertDoctor(@Param("uid") Integer uid, @Param("doctor") DoctorRegisterDTO dto);
 
     DoctorExp selectDoctorById(@Param("doctorId") Integer doctorId);
+
+    Long countDoctorSimpleByCondition(DoctorSimpleDTO dto);
+    List<DoctorSimpleVO> listDoctorSimpleByCondition(DoctorSimpleDTO dto);
+
+    List<DoctorExp> selectDoctorByIds(@Param("list") List<Integer> doctorIds);
 }

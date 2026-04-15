@@ -4,19 +4,14 @@ package cn.edu.usc.quzhijie.emrservice.user.service.impl;
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
-import cn.edu.usc.quzhijie.emrservice.user.converter.UserBaseConverter;
 import cn.edu.usc.quzhijie.emrservice.user.dto.*;
-import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
-import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
-import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
-import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
+import cn.edu.usc.quzhijie.emrservice.common.entity.Role;
+import cn.edu.usc.quzhijie.emrservice.common.entity.UserBase;
+import cn.edu.usc.quzhijie.emrservice.common.entity.UserRole;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.util.InfoUtils;
-import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
-import cn.edu.usc.quzhijie.emrservice.user.vo.RegisterDoctorVO;
-import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
-import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,11 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -228,5 +220,18 @@ public class UserServiceImpl implements UserService {
         vo.setRealName(realName);
 
         return vo;
+    }
+
+    @Override
+    public PageResult<DoctorSimpleVO> getDoctorsSimple(DoctorSimpleDTO dto) {
+        Long total = userMapper.countDoctorSimpleByCondition(dto);
+
+        if (total == 0) {
+            return PageResult.empty();
+        }
+
+        List<DoctorSimpleVO> list = userMapper.listDoctorSimpleByCondition(dto);
+
+        return new PageResult<>(total, dto.getPageNum(), dto.getPageSize(), list);
     }
 }
