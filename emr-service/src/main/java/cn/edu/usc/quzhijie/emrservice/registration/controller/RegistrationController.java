@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.registration.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
@@ -61,10 +62,11 @@ public class RegistrationController {
         return Result.success(registrationService.appointRegistration(dto));
     }
 
-    @GetMapping("/appoint")
-    public Result<List<UserAppointmentVO>> getUserAppointments(Authentication authentication) {
+    @PostMapping("/appoint/search")
+    public Result<List<UserAppointmentVO>> getUserAppointments(Authentication authentication,
+                                                               @RequestBody AppointmentFilterDTO dto) {
         Claims claims = (Claims) authentication.getDetails();
         Integer uid = (Integer) claims.get("uid");
-        return Result.success(registrationService.getUserAppointments(uid));
+        return Result.success(registrationService.getUserAppointments(uid, dto));
     }
 }

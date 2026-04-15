@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.usc.quzhijie.emrservice.schedule.mapper.DoctorScheduleMapper">
+    <select id="countScheduleByCondition" resultType="long">
+        select count(*) from doctor_schedule
+        <where>
+            <if test="doctorName != null and doctorName != ''">
+                and doctor_id in (select doctor_id from doctor_exp where real_name like concat('%', #{doctorName}, '%'))
+            </if>
+            <if test="departmentId != null">
+                and department_id = #{departmentId}
+            </if>
+            <if test="workDate != null and workDate != ''">
+                and work_date = str_to_date(#{workDate}, '%Y-%m-%d')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="listScheduleByCondition" resultType="ScheduleSearchVO">
+        select ds.schedule_id, ds.doctor_id, ds.department_id, ds.work_date, ds.max_number, ds.interval_minute, ds.status, ds.am_start_time, ds.am_end_time, ds.pm_start_time, ds.pm_end_time,
+               de.real_name as doctorName, de.doctor_title,
+               d.name as departmentName
+        from doctor_schedule ds
+        join doctor_exp de on ds.doctor_id = de.doctor_id
+        join department d on ds.department_id = d.department_id
+        <where>
+            <if test="doctorName != null and doctorName != ''">
+                and de.real_name like concat('%', #{doctorName}, '%')
+            </if>
+            <if test="departmentId != null">
+                and ds.department_id = #{departmentId}
+            </if>
+            <if test="workDate != null and workDate != ''">
+                and ds.work_date = str_to_date(#{workDate}, '%Y-%m-%d')
+            </if>
+            <if test="status != null">
+                and ds.status = #{status}
+            </if>
+        </where>
+        order by ds.work_date desc
+        limit #{offset}, #{pageSize}
+    </select>
+</mapper>

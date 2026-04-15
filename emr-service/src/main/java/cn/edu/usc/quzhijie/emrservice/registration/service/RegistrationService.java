@@ -1,6 +1,7 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service;
 
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 
@@ -23,5 +24,5 @@ public interface RegistrationService {
 
     Integer appointRegistration(AppointmentDTO dto);
 
-    List<UserAppointmentVO> getUserAppointments(Integer uid);
+    List<UserAppointmentVO> getUserAppointments(Integer uid, AppointmentFilterDTO dto);
 }

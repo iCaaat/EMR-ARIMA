@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.registration.service.impl;
 
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Appointment;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.DoctorSchedule;
@@ -166,8 +167,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<UserAppointmentVO> getUserAppointments(Integer uid) {
-        List<UserAppointmentVO> list = registrationMapper.listUserAppointments(uid);
+    public List<UserAppointmentVO> getUserAppointments(Integer uid, AppointmentFilterDTO dto) {
+        List<UserAppointmentVO> list = registrationMapper.listUserAppointments(uid, dto);
         for (UserAppointmentVO userAppointmentVO : list) {
             if (userAppointmentVO.getStatus() == 0) {
                 userAppointmentVO.setDisplayStatus("待就诊");

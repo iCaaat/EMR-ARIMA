@@ -1,5 +1,6 @@
 package cn.edu.usc.quzhijie.emrservice.file.controller;
 
+import cn.edu.usc.quzhijie.emrservice.file.entity.FileInfo;
 import cn.edu.usc.quzhijie.emrservice.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public String upload(@RequestParam MultipartFile file) throws IOException {
+    public FileInfo upload(@RequestParam MultipartFile file) throws IOException {
         return fileService.upload(file);
     }
 }

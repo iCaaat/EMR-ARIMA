@@ -149,6 +149,21 @@
         from appointment a
                  join patient_exp pe on a.patient_id = pe.patient_id
         where pe.belonging_uid = #{belongingUid}
+        <if test="dto.contactPhone != null and dto.contactPhone != ''">
+            and a.contact_phone like concat('%', #{dto.contactPhone}, '%')
+        </if>
+        <if test="dto.doctorName != null and dto.doctorName != ''">
+            and a.doctor_name like concat('%', #{dto.doctorName}, '%')
+        </if>
+        <if test="dto.departmentId != null and dto.departmentId != ''">
+            and a.department_id = #{dto.departmentId}
+        </if>
+        <if test="dto.visitDate != null">
+            and a.visit_date = #{dto.visitDate}
+        </if>
+        <if test="dto.status != null">
+            and a.status = #{dto.status}
+        </if>
         order by a.visit_date desc, a.display_no
     </select>
 </mapper>

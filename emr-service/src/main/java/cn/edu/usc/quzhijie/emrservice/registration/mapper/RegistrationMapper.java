@@ -1,6 +1,7 @@
 package cn.edu.usc.quzhijie.emrservice.registration.mapper;
 
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Appointment;
 import cn.edu.usc.quzhijie.emrservice.registration.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
@@ -38,5 +39,5 @@ public interface RegistrationMapper {
 
     Appointment getAppointmentBySlotId(AppointmentDTO dto);
 
-    List<UserAppointmentVO> listUserAppointments(@Param("belongingUid") Integer uid);
+    List<UserAppointmentVO> listUserAppointments(@Param("belongingUid") Integer uid, @Param("dto") AppointmentFilterDTO dto);
 }

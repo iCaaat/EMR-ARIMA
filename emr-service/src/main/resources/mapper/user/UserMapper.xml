@@ -197,4 +197,32 @@
             </if>
         </where>
     </select>
+
+    <insert id="insertDoctor" useGeneratedKeys="true" keyProperty="doctor.doctorId">
+        insert into doctor_exp (uid,
+                                department_id,
+                                real_name,
+                                id_card,
+                                gender,
+                                birthday,
+                                specialty,
+                                description,
+                                qualification,
+                                experience_years,
+                                doctor_title,
+                                outpatient_type,
+                                fee,
+                                avatar,
+                                status,
+                                create_time,
+                                update_time)
+        values (#{uid}, #{doctor.departmentId}, #{doctor.realName}, #{doctor.idCard}, #{doctor.gender}, #{doctor.birthday},
+                #{doctor.specialty}, #{doctor.description},#{doctor.qualification}, #{doctor.experienceYears}, #{doctor.doctorTitle}, #{doctor.outpatientType}, #{doctor.fee}, #{doctor.avatarUrl}, 0, now(), now())
+    </insert>
+
+    <select id="selectDoctorById" resultType="DoctorExp">
+        select *
+        from doctor_exp
+        where doctor_id = #{doctorId}
+    </select>
 </mapper>

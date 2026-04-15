@@ -3,6 +3,7 @@ package cn.edu.usc.quzhijie.emrservice.user.service;
 import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.user.dto.*;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.RegisterDoctorVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
 
@@ -30,4 +31,6 @@ public interface UserService {
     String updateUserInfo(UpdateUserDTO dto);
 
     PageResult<UsersVO> getUsers(UsersDTO dto);
+
+    RegisterDoctorVO registerDoctor(DoctorRegisterDTO dto);
 }

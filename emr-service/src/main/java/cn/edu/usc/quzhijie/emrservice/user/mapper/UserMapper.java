@@ -1,8 +1,10 @@
 package cn.edu.usc.quzhijie.emrservice.user.mapper;
 
+import cn.edu.usc.quzhijie.emrservice.user.dto.DoctorRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientRegisterDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UpdateUserDTO;
 import cn.edu.usc.quzhijie.emrservice.user.dto.UsersDTO;
+import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
@@ -55,4 +57,8 @@ public interface UserMapper {
 
     List<UsersVO> listUserByCondition(UsersDTO dto);
     Long countUserByCondition(UsersDTO dto);
+
+    Integer insertDoctor(@Param("uid") Integer uid, @Param("doctor") DoctorRegisterDTO dto);
+
+    DoctorExp selectDoctorById(@Param("doctorId") Integer doctorId);
 }

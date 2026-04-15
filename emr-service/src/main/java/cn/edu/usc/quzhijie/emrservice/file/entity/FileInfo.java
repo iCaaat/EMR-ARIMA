@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class FileInfo {
-    private Integer id;
+    private Long id;
     private String originalName;
     private String fileName;
     private String filePath;

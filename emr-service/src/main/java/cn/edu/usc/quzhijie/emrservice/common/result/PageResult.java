@@ -26,4 +26,8 @@ public class PageResult<T> implements Serializable {
 
     /** 数据列表 */
     private List<T> records;
+
+    public static <T> PageResult<T> empty() {
+        return new PageResult<>(0L, 0, 0, List.of());
+    }
 }

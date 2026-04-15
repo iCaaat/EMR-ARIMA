@@ -5,6 +5,7 @@ import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.user.dto.*;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.RegisterDoctorVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
 import io.jsonwebtoken.Claims;
@@ -82,5 +83,14 @@ public class UserController {
     @PostMapping("/search")
     public Result<PageResult<UsersVO>> getUsers(@RequestBody UsersDTO dto) {
         return Result.success(userService.getUsers(dto));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/doctor/register")
+    public Result<RegisterDoctorVO> registerDoctor(@RequestBody @Validated DoctorRegisterDTO dto) {
+        dto.setRoleCode("doctor");
+        RegisterDoctorVO vo = userService.registerDoctor(dto);
+        String doctorName = vo.getRealName();
+        return Result.success("医生：" + doctorName + "，注册成功!", vo);
     }
 }

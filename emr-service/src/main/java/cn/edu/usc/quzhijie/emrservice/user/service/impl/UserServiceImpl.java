@@ -6,6 +6,7 @@ import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.common.util.JwtUtils;
 import cn.edu.usc.quzhijie.emrservice.user.converter.UserBaseConverter;
 import cn.edu.usc.quzhijie.emrservice.user.dto.*;
+import cn.edu.usc.quzhijie.emrservice.user.entity.DoctorExp;
 import cn.edu.usc.quzhijie.emrservice.user.entity.Role;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserBase;
 import cn.edu.usc.quzhijie.emrservice.user.entity.UserRole;
@@ -13,6 +14,7 @@ import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import cn.edu.usc.quzhijie.emrservice.user.service.UserService;
 import cn.edu.usc.quzhijie.emrservice.user.util.InfoUtils;
 import cn.edu.usc.quzhijie.emrservice.user.vo.LoginVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.RegisterDoctorVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UsersVO;
 import lombok.RequiredArgsConstructor;
@@ -150,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
         Long total = userMapper.countUserByCondition(dto);
         if (total == 0) {
-            return new PageResult<>(0L, pageNum, pageSize, List.of());
+            return PageResult.empty();
         }
         List<UsersVO> users = userMapper.listUserByCondition(dto);
 
@@ -166,5 +168,65 @@ public class UserServiceImpl implements UserService {
         }
 
         return new PageResult<>(total, pageNum, pageSize, users);
+    }
+
+    @Override
+    @Transactional
+    public RegisterDoctorVO registerDoctor(DoctorRegisterDTO dto) {
+        String username = dto.getUsername();
+        String password = dto.getPassword();
+        String realName = dto.getRealName();
+        String idCard = dto.getIdCard();
+
+        String outpatientType = dto.getOutpatientType();
+
+        // 1.业务校验
+        if (userMapper.checkUsernameExists(username)) {
+            throw new BizException("用户名已被注册");
+        }
+        if (userMapper.checkRealNameAndIdCardExists(realName, idCard)) {
+            throw new BizException("此身份证信息已存在账户");
+        }
+
+        // 2.密码加密存储
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodePwd = encoder.encode(password);
+
+        // 3.保存用户
+        UserBase user = new UserBase();
+        BeanUtils.copyProperties(dto, user);
+        user.setPassword(encodePwd);
+        userMapper.insertUserBase(user);
+
+        Integer uid = user.getUid();
+        Role role = userMapper.selectRoleByRoleCode(dto.getRoleCode());
+        Integer roleId = role.getRoleId();
+        UserRole userRole = new UserRole();
+        userRole.setUid(uid);
+        userRole.setRoleId(roleId);
+        userMapper.insertUserRole(userRole);
+
+        // 4.插入医生信息
+        // 身份证计算出生日期和性别
+        String gender = idCard.charAt(idCard.length() - 2) % 2 == 0 ? "F" : "M";
+        LocalDate birthday = LocalDate.parse(idCard.substring(6, 14), DateTimeFormatter.ofPattern("yyyyMMdd"));
+        dto.setGender(gender);
+        dto.setBirthday(birthday);
+
+        if (!StringUtils.hasText(outpatientType)) {
+            dto.setOutpatientType("normal");
+        }
+        userMapper.insertDoctor(uid, dto);
+
+        // 5.返回注册成功信息
+        Integer doctorId = dto.getDoctorId();
+        RegisterDoctorVO vo = new RegisterDoctorVO();
+        vo.setDoctorId(doctorId);
+        vo.setUsername(username);
+        vo.setPassword(password);
+        vo.setIdCard(idCard);
+        vo.setRealName(realName);
+
+        return vo;
     }
 }
