@@ -4,15 +4,15 @@ import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleAddDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleSearchDTO;
+import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleUpdateDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.service.DoctorScheduleService;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleDeleteVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleSearchVO;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleUpdateVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,8 +29,20 @@ public class DoctorScheduleController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add")
+    @PostMapping
     public Result<Integer> addSchedule(@RequestBody @Validated ScheduleAddDTO dto) {
         return Result.success("添加成功", doctorScheduleService.addSchedule(dto));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
+    public Result<ScheduleDeleteVO> deleteSchedule(@PathVariable("id") Integer scheduleId) {
+        return Result.success(doctorScheduleService.deleteSchedule(scheduleId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping
+    public Result<ScheduleUpdateVO> updateSchedule(@RequestBody @Validated ScheduleUpdateDTO dto) {
+        return Result.success(doctorScheduleService.updateSchedule(dto));
     }
 }

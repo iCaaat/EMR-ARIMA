@@ -84,4 +84,43 @@
         </foreach>
 
     </insert>
+
+    <delete id="deleteScheduleById">
+        delete from doctor_schedule
+        where schedule_id = #{scheduleId}
+    </delete>
+
+    <update id="updateSchedule">
+        UPDATE doctor_schedule
+        <set>
+            <if test="amStartTime != null">
+                am_start_time = #{amStartTime},
+            </if>
+            <if test="amEndTime != null">
+                am_end_time = #{amEndTime},
+            </if>
+            <if test="pmStartTime != null">
+                pm_start_time = #{pmStartTime},
+            </if>
+            <if test="pmEndTime != null">
+                pm_end_time = #{pmEndTime},
+            </if>
+            <if test="intervalMinute != null">
+                interval_minute = #{intervalMinute},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="maxNumber != null">
+                max_number = #{maxNumber},
+            </if>
+        </set>
+        WHERE schedule_id = #{scheduleId}
+    </update>
+
+    <select id="selectByScheduleId" resultType="DoctorSchedule">
+        select *
+        from doctor_schedule
+        where schedule_id = #{scheduleId}
+    </select>
 </mapper>

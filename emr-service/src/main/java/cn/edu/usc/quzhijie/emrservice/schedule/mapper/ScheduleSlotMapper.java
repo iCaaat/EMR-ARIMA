@@ -9,4 +9,7 @@ import java.util.List;
 @Mapper
 public interface ScheduleSlotMapper {
     Integer batchInsertSlots(@Param("list") List<ScheduleSlot> scheduleSlots);
+
+    Integer selectByScheduleId(Integer scheduleId);
+    Integer deleteByScheduleId(Integer scheduleId);
 }

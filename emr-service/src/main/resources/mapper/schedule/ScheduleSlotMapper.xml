@@ -31,4 +31,15 @@
             )
         </foreach>
     </insert>
+
+    <delete id="deleteByScheduleId">
+        delete from schedule_slot
+        where schedule_id = #{scheduleId}
+    </delete>
+
+    <select id="selectByScheduleId" resultType="int">
+        select count(*)
+        from schedule_slot
+        where schedule_id = #{scheduleId}
+    </select>
 </mapper>

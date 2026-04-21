@@ -23,6 +23,7 @@
         and ss.status = 'available'
         where de.department_id = #{departmentId}
           and de.status = 0
+          and ds.status = 0
           and ds.work_date = str_to_date(#{workDate}, '%Y-%m-%d')
         group by de.doctor_id, ds.schedule_id
     </select>

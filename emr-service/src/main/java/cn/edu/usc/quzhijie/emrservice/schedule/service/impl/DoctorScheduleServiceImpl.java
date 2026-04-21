@@ -7,10 +7,13 @@ import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleAddDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleSearchDTO;
+import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleUpdateDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.mapper.DoctorScheduleMapper;
 import cn.edu.usc.quzhijie.emrservice.schedule.mapper.ScheduleSlotMapper;
 import cn.edu.usc.quzhijie.emrservice.schedule.service.DoctorScheduleService;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleDeleteVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleSearchVO;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleUpdateVO;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -224,7 +227,7 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
 
 
     // 生成号源
-    private void generateScheduleSlots(List<DoctorSchedule> schedules) {
+    private Integer generateScheduleSlots(List<DoctorSchedule> schedules) {
         List<Integer> doctorIds =
                 schedules.stream()
                         .map(DoctorSchedule::getDoctorId)
@@ -272,7 +275,7 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
             );
         }
 
-        scheduleSlotMapper.batchInsertSlots(slotList);
+        return scheduleSlotMapper.batchInsertSlots(slotList);
     }
 
     private void generatePeriodSlots(
@@ -321,5 +324,88 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
 
             seq++;
         }
+    }
+
+    @Override
+    @Transactional
+    public ScheduleDeleteVO deleteSchedule(Integer scheduleId) {
+        Integer result = doctorScheduleMapper.deleteScheduleById(scheduleId);
+
+        Integer slotCount = scheduleSlotMapper.selectByScheduleId(scheduleId);
+        if (slotCount > 0) {
+            scheduleSlotMapper.deleteByScheduleId(scheduleId);
+        }
+
+        ScheduleDeleteVO vo = new ScheduleDeleteVO();
+        vo.setScheduleResult(result);
+        vo.setSlotResult(slotCount);
+        return vo;
+    }
+
+    @Override
+    @Transactional
+    public ScheduleUpdateVO updateSchedule(ScheduleUpdateDTO dto) {
+        if (dto.getAmStartTime() == null
+        && dto.getAmEndTime() == null
+        && dto.getPmStartTime() == null
+        && dto.getPmEndTime() == null
+        && dto.getIntervalMinute() == null
+        && dto.getStatus() == null) {
+            throw new BizException("没有需要更新的字段");
+        }
+        Integer scheduleId = dto.getScheduleId();
+
+        // 1.更新排班信息
+        // 历史排班不可更新
+        DoctorSchedule schedule = doctorScheduleMapper.selectByScheduleId(scheduleId);
+        if (schedule.getWorkDate().isBefore(LocalDate.now())) {
+            throw new BizException("历史排班无法更新!");
+        }
+
+        // 计算最大号源
+        LocalTime amStart = dto.getAmStartTime() != null ? dto.getAmStartTime() : schedule.getAmStartTime();
+        LocalTime amEnd = dto.getAmEndTime() != null ? dto.getAmEndTime() : schedule.getAmEndTime();
+        LocalTime pmStart = dto.getPmStartTime() != null ? dto.getPmStartTime() : schedule.getPmStartTime();
+        LocalTime pmEnd = dto.getPmEndTime() != null ? dto.getPmEndTime() : schedule.getPmEndTime();
+        Integer intervalMinute = dto.getIntervalMinute() != null ? dto.getIntervalMinute() : schedule.getIntervalMinute();
+
+        Integer maxNumber = calculateMaxNumber(amStart, amEnd, pmStart, pmEnd, intervalMinute);
+        dto.setMaxNumber(maxNumber);
+
+        Integer scheduleResult = doctorScheduleMapper.updateSchedule(dto);
+
+        // 是否需要更新号源信息
+        boolean needReGenerate =
+                changed(dto.getAmStartTime(), schedule.getAmStartTime())
+                        || changed(dto.getAmEndTime(), schedule.getAmEndTime())
+                        || changed(dto.getPmStartTime(), schedule.getPmStartTime())
+                        || changed(dto.getPmEndTime(), schedule.getPmEndTime())
+                        || changed(dto.getIntervalMinute(), schedule.getIntervalMinute());
+
+        Integer deletedSlots = 0;
+        Integer slotResult = 0;
+
+        if (needReGenerate) {
+
+            // 2.删除号源
+            deletedSlots = scheduleSlotMapper.deleteByScheduleId(scheduleId);
+
+            // 3.重新生成号源
+            DoctorSchedule scheduleAfter = doctorScheduleMapper.selectByScheduleId(scheduleId);
+            List<DoctorSchedule> list = List.of(scheduleAfter);
+            slotResult = generateScheduleSlots(list);
+        }
+
+        // 4.返回更新结果
+        ScheduleUpdateVO vo = new ScheduleUpdateVO();
+        vo.setScheduleResult(scheduleResult);
+        vo.setSlotDelete(deletedSlots);
+        vo.setSlotResult(slotResult);
+
+        return vo;
+    }
+
+    private boolean changed(Object newVal, Object oldVal) {
+        return newVal != null && !newVal.equals(oldVal);
     }
 }
