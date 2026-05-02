@@ -6,6 +6,7 @@ import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RegistrationService {
     List<DepartmentVO> getDepartmentInfo();
@@ -25,4 +26,6 @@ public interface RegistrationService {
     Integer appointRegistration(AppointmentDTO dto);
 
     List<UserAppointmentVO> getUserAppointments(Integer uid, AppointmentFilterDTO dto);
+
+    List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId);
 }

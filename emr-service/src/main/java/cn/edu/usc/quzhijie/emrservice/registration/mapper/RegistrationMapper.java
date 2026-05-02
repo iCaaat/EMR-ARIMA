@@ -11,7 +11,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RegistrationMapper {
@@ -38,4 +40,6 @@ public interface RegistrationMapper {
     Appointment getAppointmentBySlotId(AppointmentDTO dto);
 
     List<UserAppointmentVO> listUserAppointments(@Param("belongingUid") Integer uid, @Param("dto") AppointmentFilterDTO dto);
+
+    List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId);
 }

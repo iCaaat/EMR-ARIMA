@@ -189,4 +189,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         return list;
     }
+
+    @Override
+    public List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId) {
+        return registrationMapper.getDailyAppointmentCount(departmentId);
+    }
 }

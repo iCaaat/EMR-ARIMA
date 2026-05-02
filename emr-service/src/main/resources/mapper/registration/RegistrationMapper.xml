@@ -167,4 +167,12 @@
         </if>
         order by a.visit_date desc, a.display_no
     </select>
+
+    <select id="getDailyAppointmentCount" resultType="hashMap">
+        select visit_date as date, COUNT(*) as count
+        from appointment
+        where department_id = #{departmentId}
+        group by visit_date
+        order by visit_date
+    </select>
 </mapper>
