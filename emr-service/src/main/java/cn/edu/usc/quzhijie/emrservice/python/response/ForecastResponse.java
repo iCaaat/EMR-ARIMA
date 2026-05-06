@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.python.response;
 
 import cn.edu.usc.quzhijie.emrservice.python.response.vo.AnalysisVO;
 import cn.edu.usc.quzhijie.emrservice.python.response.vo.ModelVO;
+import cn.edu.usc.quzhijie.emrservice.python.response.vo.ResidualTestVO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -18,4 +19,7 @@ public class ForecastResponse {
 
     private ModelVO model;
     private AnalysisVO analysis;
+
+    @JsonProperty("residual_test")
+    private ResidualTestVO residualTest;
 }

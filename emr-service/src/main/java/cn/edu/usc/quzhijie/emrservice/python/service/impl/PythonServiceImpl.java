@@ -6,6 +6,7 @@ import cn.edu.usc.quzhijie.emrservice.python.request.TimePointRequest;
 import cn.edu.usc.quzhijie.emrservice.python.response.ForecastResponse;
 import cn.edu.usc.quzhijie.emrservice.python.response.vo.AnalysisVO;
 import cn.edu.usc.quzhijie.emrservice.python.response.vo.ModelVO;
+import cn.edu.usc.quzhijie.emrservice.python.response.vo.ResidualTestVO;
 import cn.edu.usc.quzhijie.emrservice.python.service.PythonService;
 import cn.edu.usc.quzhijie.emrservice.python.vo.ArimaPredictVO;
 import cn.edu.usc.quzhijie.emrservice.python.vo.ScheduleSuggestionVO;
@@ -29,6 +30,7 @@ public class PythonServiceImpl implements PythonService {
     @Override
     public ArimaPredictVO arimaPredictByDepartment(Integer departmentId, Integer days) {
         String url = PythonServerApi.API_PREDICT;
+        String analyzeUrl = PythonServerApi.API_ANALYZE;
         RestTemplate restTemplate = new RestTemplate();
 
         // 1.历史数据
@@ -68,6 +70,10 @@ public class PythonServiceImpl implements PythonService {
         ForecastResponse response = restTemplate.postForObject(
                 url, request, ForecastResponse.class
         );
+        // 生成图片
+        restTemplate.postForObject(
+                analyzeUrl, request, String.class
+        );
         if (response == null) {
             throw new BizException("数据预测模块出现问题");
         }
@@ -75,6 +81,7 @@ public class PythonServiceImpl implements PythonService {
         List<Double> forecast = response.getForecast();
         ModelVO model = response.getModel();
         AnalysisVO analysis = response.getAnalysis();
+        ResidualTestVO residualTest = response.getResidualTest();
 
         List<String> futureDates = generateFutureDates(
                 dates.get(dates.size() - 1),
@@ -114,6 +121,7 @@ public class PythonServiceImpl implements PythonService {
         vo.setModel(model);
         vo.setAnalysis(analysis);
         vo.setSuggestions(suggestions);
+        vo.setResidualTest(residualTest);
 
         return vo;
     }

@@ -2,6 +2,7 @@ package cn.edu.usc.quzhijie.emrservice.python.vo;
 
 import cn.edu.usc.quzhijie.emrservice.python.response.vo.AnalysisVO;
 import cn.edu.usc.quzhijie.emrservice.python.response.vo.ModelVO;
+import cn.edu.usc.quzhijie.emrservice.python.response.vo.ResidualTestVO;
 import lombok.Data;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public class ArimaPredictVO {
 
     // 3.统计信息
     private AnalysisVO analysis;
+
+    private ResidualTestVO residualTest;
 
     // 3.排班推荐
     private List<ScheduleSuggestionVO> suggestions;
