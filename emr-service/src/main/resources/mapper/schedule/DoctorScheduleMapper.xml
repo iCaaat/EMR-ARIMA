@@ -123,4 +123,11 @@
         from doctor_schedule
         where schedule_id = #{scheduleId}
     </select>
+
+    <select id="listScheduleByDoctorId" resultType="DoctorScheduleVO">
+        select *
+        from doctor_schedule
+        where doctor_id = #{doctorId}
+        order by work_date desc
+    </select>
 </mapper>

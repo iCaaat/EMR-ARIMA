@@ -9,4 +9,8 @@
     <select id="getDoctorById" resultType="DoctorExp">
         select * from doctor_exp where doctor_id = #{doctorId} and status = 0;
     </select>
+
+    <select id="getDoctorByUid" resultType="DoctorExp">
+        select * from doctor_exp where uid = #{uid}
+    </select>
 </mapper>

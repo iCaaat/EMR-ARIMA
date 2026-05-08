@@ -6,11 +6,14 @@ import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleAddDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleSearchDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleUpdateDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.service.DoctorScheduleService;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.DoctorScheduleVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleDeleteVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleSearchVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleUpdateVO;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +47,14 @@ public class DoctorScheduleController {
     @PutMapping
     public Result<ScheduleUpdateVO> updateSchedule(@RequestBody @Validated ScheduleUpdateDTO dto) {
         return Result.success(doctorScheduleService.updateSchedule(dto));
+    }
+
+    @PreAuthorize("hasAnyRole('DOCTOR')")
+    @GetMapping("/doctor")
+    public Result<List<DoctorScheduleVO>> getDoctorSchedule(Authentication authentication) {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+
+        return Result.success(doctorScheduleService.getDoctorSchedule(uid));
     }
 }

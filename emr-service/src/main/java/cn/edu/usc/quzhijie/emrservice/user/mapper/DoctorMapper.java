@@ -11,4 +11,6 @@ public interface DoctorMapper {
     List<DoctorExp> selectDoctorsOnWorkByDepartmentId(Integer departmentId);
 
     DoctorExp getDoctorById(@Param("doctorId") Integer doctorId);
+
+    DoctorExp getDoctorByUid(@Param("uid") Integer uid);
 }

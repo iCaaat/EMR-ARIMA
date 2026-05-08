@@ -11,9 +11,11 @@ import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleUpdateDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.mapper.DoctorScheduleMapper;
 import cn.edu.usc.quzhijie.emrservice.schedule.mapper.ScheduleSlotMapper;
 import cn.edu.usc.quzhijie.emrservice.schedule.service.DoctorScheduleService;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.DoctorScheduleVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleDeleteVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleSearchVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleUpdateVO;
+import cn.edu.usc.quzhijie.emrservice.user.mapper.DoctorMapper;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
     private final DoctorScheduleMapper doctorScheduleMapper;
     private final ScheduleSlotMapper scheduleSlotMapper;
     private final UserMapper userMapper;
+    private final DoctorMapper doctorMapper;
 
     @Override
     public PageResult<ScheduleSearchVO> searchSchedule(ScheduleSearchDTO dto) {
@@ -407,5 +410,19 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
 
     private boolean changed(Object newVal, Object oldVal) {
         return newVal != null && !newVal.equals(oldVal);
+    }
+
+    @Override
+    public List<DoctorScheduleVO> getDoctorSchedule(Integer uid) {
+        DoctorExp doctor = doctorMapper.getDoctorByUid(uid);
+        if (doctor == null) {
+            throw new BizException("医生信息出错");
+        }
+        if (doctor.getStatus() != 0) {
+            throw new BizException("医生状态异常");
+        }
+        Integer doctorId = doctor.getDoctorId();
+
+        return doctorScheduleMapper.listScheduleByDoctorId(doctorId);
     }
 }

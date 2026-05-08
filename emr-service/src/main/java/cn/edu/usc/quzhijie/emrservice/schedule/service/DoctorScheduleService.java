@@ -4,6 +4,7 @@ import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleAddDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleSearchDTO;
 import cn.edu.usc.quzhijie.emrservice.schedule.dto.ScheduleUpdateDTO;
+import cn.edu.usc.quzhijie.emrservice.schedule.vo.DoctorScheduleVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleDeleteVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleSearchVO;
 import cn.edu.usc.quzhijie.emrservice.schedule.vo.ScheduleUpdateVO;
@@ -19,4 +20,6 @@ public interface DoctorScheduleService {
     ScheduleDeleteVO deleteSchedule(Integer scheduleId);
 
     ScheduleUpdateVO updateSchedule(ScheduleUpdateDTO dto);
+
+    List<DoctorScheduleVO> getDoctorSchedule(Integer uid);
 }
