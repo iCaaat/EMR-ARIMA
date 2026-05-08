@@ -175,4 +175,68 @@
         group by visit_date
         order by visit_date
     </select>
+
+    <select id="getDoctorAppointmentsByCondition" resultType="DoctorAppointmentsVO">
+        select a.appointment_id,
+               a.patient_id,
+               a.patient_name,
+               a.department_name,
+               a.visit_date,
+               a.period,
+               a.display_no,
+               a.contact_phone,
+               a.status
+        from appointment a
+        where doctor_id = #{doctorId}
+        <if test="dto.contactPhone != null and dto.contactPhone != ''">
+            and contact_phone like concat('%', #{dto.contactPhone}, '%')
+        </if>
+        <if test="dto.patientName != null and dto.patientName != ''">
+            and patient_name like concat('%', #{dto.patientName}, '%')
+        </if>
+        <if test="dto.visitDate != null">
+            and visit_date = #{dto.visitDate}
+        </if>
+        <if test="dto.status != null">
+            and status = #{dto.status}
+        </if>
+
+        order by visit_date desc, display_no
+    </select>
+    <select id="countDoctorAppointmentsByCondition" resultType="long">
+        select count(*)
+        from appointment
+        where doctor_id = #{doctorId}
+        <if test="dto.contactPhone != null and dto.contactPhone != ''">
+            and contact_phone like concat('%', #{dto.contactPhone}, '%')
+        </if>
+        <if test="dto.patientName != null and dto.patientName != ''">
+            and patient_name like concat('%', #{dto.patientName}, '%')
+        </if>
+        <if test="dto.visitDate != null">
+            and visit_date = #{dto.visitDate}
+        </if>
+        <if test="dto.status != null">
+            and status = #{dto.status}
+        </if>
+    </select>
+
+    <update id="updateAppointmentStatusById">
+        update appointment
+        set status = #{status}
+        where appointment_id = #{appointmentId}
+        and doctor_id = #{doctorId}
+    </update>
+
+    <update id="updateAppointmentStatus">
+        update appointment
+        set status = #{status}
+        where appointment_id = #{appointmentId}
+    </update>
+
+    <select id="getAppointmentById" resultType="Appointment">
+        select *
+        from appointment
+        where appointment_id = #{appointmentId}
+    </select>
 </mapper>

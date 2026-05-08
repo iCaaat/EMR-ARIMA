@@ -6,6 +6,7 @@ import cn.edu.usc.quzhijie.emrservice.common.entity.Appointment;
 import cn.edu.usc.quzhijie.emrservice.common.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.common.entity.DoctorSchedule;
 import cn.edu.usc.quzhijie.emrservice.common.entity.ScheduleSlot;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.DoctorAppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -42,4 +43,13 @@ public interface RegistrationMapper {
     List<UserAppointmentVO> listUserAppointments(@Param("belongingUid") Integer uid, @Param("dto") AppointmentFilterDTO dto);
 
     List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId);
+
+    List<DoctorAppointmentsVO> getDoctorAppointmentsByCondition(@Param("doctorId") Integer doctorId, @Param("dto") DoctorAppointmentFilterDTO dto);
+    Long countDoctorAppointmentsByCondition(@Param("doctorId") Integer doctorId, @Param("dto") DoctorAppointmentFilterDTO dto);
+
+    Integer updateAppointmentStatusById(@Param("doctorId") Integer doctorId,@Param("appointmentId") Integer appointmentId, @Param("status") Integer status);
+
+    Appointment getAppointmentById(Integer appointmentId);
+
+    Integer updateAppointmentStatus(@Param("appointmentId") Integer appointmentId, @Param("status") Integer status);
 }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class Appointment {
     private Integer appointmentId;
     private Integer patientId;
+    private String patientName;
     private Integer doctorId;
     private String doctorName;
     private Integer departmentId;

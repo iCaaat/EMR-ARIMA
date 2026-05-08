@@ -1,13 +1,16 @@
 package cn.edu.usc.quzhijie.emrservice.record.controller;
 
 import cn.edu.usc.quzhijie.emrservice.common.result.Result;
+import cn.edu.usc.quzhijie.emrservice.record.dto.PostRecordDTO;
 import cn.edu.usc.quzhijie.emrservice.record.service.MedicalService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 
 @RestController
@@ -22,5 +25,16 @@ public class MedicalController {
                 .header("Content-Disposition", "inline; filename=medical.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(medicalService.getMedicalRecordPdf());
+    }
+
+    @PreAuthorize("hasRole('DOCTOR')")
+    @PostMapping
+    public Result<String> postRecord(Authentication authentication,
+                                     @RequestBody @Validated PostRecordDTO dto) {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+
+        medicalService.addMedicalRecord(uid, dto);
+        return Result.success("病历提交成功");
     }
 }

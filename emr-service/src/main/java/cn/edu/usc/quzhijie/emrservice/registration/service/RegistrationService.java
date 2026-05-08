@@ -1,7 +1,9 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service;
 
+import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.DoctorAppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.SlotsDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 
@@ -28,4 +30,8 @@ public interface RegistrationService {
     List<UserAppointmentVO> getUserAppointments(Integer uid, AppointmentFilterDTO dto);
 
     List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId);
+
+    PageResult<DoctorAppointmentsVO> getDoctorAppointments(Integer uid, DoctorAppointmentFilterDTO dto);
+
+    Integer updateAppointmentStatus(Integer uid, Integer appointmentId, Integer status);
 }

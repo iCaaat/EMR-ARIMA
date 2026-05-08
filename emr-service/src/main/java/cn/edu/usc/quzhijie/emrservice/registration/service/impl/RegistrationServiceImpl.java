@@ -1,12 +1,14 @@
 package cn.edu.usc.quzhijie.emrservice.registration.service.impl;
 
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
+import cn.edu.usc.quzhijie.emrservice.common.result.PageResult;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.dto.AppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.common.entity.Appointment;
 import cn.edu.usc.quzhijie.emrservice.common.entity.Department;
 import cn.edu.usc.quzhijie.emrservice.common.entity.DoctorSchedule;
 import cn.edu.usc.quzhijie.emrservice.common.entity.ScheduleSlot;
+import cn.edu.usc.quzhijie.emrservice.registration.dto.DoctorAppointmentFilterDTO;
 import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
@@ -193,5 +195,38 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId) {
         return registrationMapper.getDailyAppointmentCount(departmentId);
+    }
+
+    @Override
+    public PageResult<DoctorAppointmentsVO> getDoctorAppointments(Integer uid, DoctorAppointmentFilterDTO dto) {
+        DoctorExp doctor = doctorMapper.getDoctorByUid(uid);
+        if (doctor == null) {
+            throw new BizException("医生信息不存在");
+        }
+        Integer doctorId = doctor.getDoctorId();
+
+        Long count = registrationMapper.countDoctorAppointmentsByCondition(doctorId, dto);
+        if (count == 0) {
+            return PageResult.empty();
+        }
+        List<DoctorAppointmentsVO> list = registrationMapper.getDoctorAppointmentsByCondition(doctorId, dto);
+        return new PageResult<>(count, dto.getPageNum(), dto.getPageSize(), list);
+    }
+
+    @Override
+    @Transactional
+    public Integer updateAppointmentStatus(Integer uid, Integer appointmentId, Integer status) {
+        DoctorExp doctor = doctorMapper.getDoctorByUid(uid);
+        if (doctor == null) {
+            throw new BizException("医生信息不存在");
+        }
+        Integer doctorId = doctor.getDoctorId();
+
+        Integer result = registrationMapper.updateAppointmentStatusById(doctorId, appointmentId, status);
+        if (result == 0) {
+            throw new BizException("更新预约状态失败，可能预约不存在或不属于该医生");
+        }
+
+        return result;
     }
 }
