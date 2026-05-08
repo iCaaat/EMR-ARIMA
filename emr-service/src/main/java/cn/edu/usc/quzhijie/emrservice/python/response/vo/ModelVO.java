@@ -15,5 +15,7 @@ public class ModelVO {
     private Double aic;
     private Double bic;
 
+    private Double mse;
+    private Double mae;
     private Double rmse;
 }

@@ -2,17 +2,22 @@ package cn.edu.usc.quzhijie.emrservice.record.service.impl;
 
 import cn.edu.usc.quzhijie.emrservice.common.entity.Appointment;
 import cn.edu.usc.quzhijie.emrservice.common.entity.DoctorExp;
+import cn.edu.usc.quzhijie.emrservice.common.entity.PatientExp;
 import cn.edu.usc.quzhijie.emrservice.common.exception.BizException;
 import cn.edu.usc.quzhijie.emrservice.common.util.PdfGenerator;
 import cn.edu.usc.quzhijie.emrservice.record.dto.PostRecordDTO;
 import cn.edu.usc.quzhijie.emrservice.record.mapper.MedicalRecordMapper;
 import cn.edu.usc.quzhijie.emrservice.record.service.MedicalService;
+import cn.edu.usc.quzhijie.emrservice.record.vo.MyRecordVO;
 import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.DoctorMapper;
+import cn.edu.usc.quzhijie.emrservice.user.mapper.PatientMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ public class MedicalServiceImpl implements MedicalService {
     private final PdfGenerator pdfGenerator;
     private final RegistrationMapper registrationMapper;
     private final MedicalRecordMapper medicalRecordMapper;
+    private final PatientMapper patientMapper;
 
     @Override
     public byte[] getMedicalRecordPdf() {
@@ -57,5 +63,15 @@ public class MedicalServiceImpl implements MedicalService {
         }
 
         return result;
+    }
+
+    @Override
+    public List<MyRecordVO> getMyRecords(Integer uid, Integer patientId) {
+        PatientExp patientExp = patientMapper.getPatientById(uid, patientId);
+        if (patientExp == null) {
+            throw new BizException("就诊人不存在");
+        }
+
+        return medicalRecordMapper.listByPatientId(patientId);
     }
 }

@@ -33,7 +33,7 @@ public class PythonController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/predict")
     public Result<ArimaPredictVO> predict(@RequestParam Integer departmentId, @RequestParam Integer days) {
-        return Result.success(pythonService.arimaPredictByDepartment(departmentId, days));
+        return Result.success(pythonService.arimaPredictByDepartmentTest(departmentId, days));
     }
 
 }

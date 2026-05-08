@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PythonService {
     ArimaPredictVO arimaPredictByDepartment(Integer departmentId, Integer days);
+
+    ArimaPredictVO arimaPredictByDepartmentTest(Integer departmentId, Integer days);
 }

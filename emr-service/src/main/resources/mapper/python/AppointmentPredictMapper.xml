@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.usc.quzhijie.emrservice.python.mapper.AppointmentPredictMapper">
+    <select id="listPredictData" resultType="java.util.Map">
+        SELECT
+            visit_date AS date,
+            appoint_count AS count
+        FROM appointment_predict
+        WHERE department_id = #{departmentId}
+        ORDER BY visit_date
+    </select>
+</mapper>

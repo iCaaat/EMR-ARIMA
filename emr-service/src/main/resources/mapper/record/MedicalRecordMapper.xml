@@ -6,4 +6,11 @@
         insert into medical_record (patient_id, patient_name, doctor_id, doctor_name, department_name, appointment_id, chief_complaint, present_illness, past_history, allergy_history, physical_exam, auxiliary_exam, diagnosis, treatment_plan, prescription, doctor_advice, remark, status, visit_date, create_time, update_time)
         VALUES (#{patientId}, #{patientName}, #{doctorId}, #{doctorName}, #{departmentName}, #{appointmentId}, #{chiefComplaint}, #{presentIllness}, #{pastHistory}, #{allergyHistory}, #{physicalExam}, #{auxiliaryExam}, #{diagnosis}, #{treatmentPlan}, #{prescription}, #{doctorAdvice}, #{remark}, #{status}, #{visitDate}, now(), now())
     </insert>
+
+    <select id="listByPatientId" resultType="MyRecordVO">
+        select *
+        from medical_record
+        where patient_id = #{patientId}
+        order by create_time desc
+    </select>
 </mapper>
