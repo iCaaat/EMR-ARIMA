@@ -99,4 +99,24 @@
         where belonging_uid = #{belongingUid}
         and patient_id = #{patientId}
     </delete>
+
+    <select id="countActivePatientsByUid" resultType="int">
+        select count(*)
+        from patient_exp
+        where belonging_uid = #{uid}
+        and status = 0
+    </select>
+    <select id="selectActivePatientIdsByUid" resultType="int">
+        select patient_id
+        from patient_exp
+        where belonging_uid = #{uid}
+        and status = 0
+    </select>
+    <select id="selectDefaultPatientByUid" resultType="PatientExp">
+        select *
+        from patient_exp
+        where belonging_uid = #{uid}
+        and status = 0
+        and relation = 'self'
+    </select>
 </mapper>

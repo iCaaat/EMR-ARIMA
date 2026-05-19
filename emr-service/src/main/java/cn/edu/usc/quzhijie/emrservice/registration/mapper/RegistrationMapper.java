@@ -42,7 +42,7 @@ public interface RegistrationMapper {
 
     List<UserAppointmentVO> listUserAppointments(@Param("belongingUid") Integer uid, @Param("dto") AppointmentFilterDTO dto);
 
-    List<Map<String, Object>> getDailyAppointmentCount(Integer departmentId);
+    List<Map<String, Object>> getDailyAppointmentCount(@Param("departmentId") Integer departmentId);
 
     List<DoctorAppointmentsVO> getDoctorAppointmentsByCondition(@Param("doctorId") Integer doctorId, @Param("dto") DoctorAppointmentFilterDTO dto);
     Long countDoctorAppointmentsByCondition(@Param("doctorId") Integer doctorId, @Param("dto") DoctorAppointmentFilterDTO dto);
@@ -52,4 +52,7 @@ public interface RegistrationMapper {
     Appointment getAppointmentById(Integer appointmentId);
 
     Integer updateAppointmentStatus(@Param("appointmentId") Integer appointmentId, @Param("status") Integer status);
+
+    Appointment selectNextAppointment(@Param("patientIds") List<Integer> patientIds);
+    List<Appointment> selectRecentAppointments(@Param("patientIds") List<Integer> patientIds, @Param("limit") Integer limit);
 }

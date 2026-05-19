@@ -13,4 +13,25 @@
         where patient_id = #{patientId}
         order by create_time desc
     </select>
+
+    <select id="countCompletedRecords" resultType="int">
+        select count(*)
+        from medical_record
+        where patient_id in
+        <foreach collection="patientIds" item="patientId" open="(" separator="," close=")">
+            #{patientId}
+        </foreach>
+        and status = 0
+    </select>
+    <select id="selectLatestCompletedRecord" resultType="MedicalRecord">
+        select *
+        from medical_record
+        where patient_id in
+        <foreach collection="patientIds" item="patientId" open="(" separator="," close=")">
+            #{patientId}
+        </foreach>
+        and status = 0
+        order by visit_date desc, update_time desc
+        limit 1
+    </select>
 </mapper>

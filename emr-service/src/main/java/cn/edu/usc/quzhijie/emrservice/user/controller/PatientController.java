@@ -4,6 +4,7 @@ import cn.edu.usc.quzhijie.emrservice.common.result.Result;
 import cn.edu.usc.quzhijie.emrservice.user.dto.PatientDetailDTO;
 import cn.edu.usc.quzhijie.emrservice.user.service.PatientService;
 import cn.edu.usc.quzhijie.emrservice.user.vo.PatientDetailVO;
+import cn.edu.usc.quzhijie.emrservice.user.vo.PatientOverviewVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientSimpleVO;
 import cn.edu.usc.quzhijie.emrservice.user.vo.UserPatientVO;
 import io.jsonwebtoken.Claims;
@@ -64,5 +65,12 @@ public class PatientController {
         Claims claims = (Claims) authentication.getDetails();
         Integer uid = (Integer) claims.get("uid");
         return Result.success(patientService.deleteUserPatient(uid, patientId));
+    }
+
+    @GetMapping("/overview")
+    public Result<PatientOverviewVO> getPatientOverview(Authentication authentication) {
+        Claims claims = (Claims) authentication.getDetails();
+        Integer uid = (Integer) claims.get("uid");
+        return Result.success(patientService.getPatientOverview(uid));
     }
 }
