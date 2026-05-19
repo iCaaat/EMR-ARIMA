@@ -12,4 +12,6 @@ public interface ScheduleSlotMapper {
 
     Integer selectByScheduleId(Integer scheduleId);
     Integer deleteByScheduleId(Integer scheduleId);
+
+    Integer updateSlotStatusById(@Param("slotId") Integer slotId, @Param("status") String status);
 }

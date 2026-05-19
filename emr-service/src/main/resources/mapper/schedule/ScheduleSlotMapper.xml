@@ -42,4 +42,10 @@
         from schedule_slot
         where schedule_id = #{scheduleId}
     </select>
+
+    <update id="updateSlotStatusById">
+        update schedule_slot
+        set status = #{status}
+        where slot_id = #{slotId}
+    </update>
 </mapper>

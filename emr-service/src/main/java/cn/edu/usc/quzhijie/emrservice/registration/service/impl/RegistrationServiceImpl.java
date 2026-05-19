@@ -13,6 +13,7 @@ import cn.edu.usc.quzhijie.emrservice.registration.mapper.RegistrationMapper;
 import cn.edu.usc.quzhijie.emrservice.registration.service.RegistrationService;
 import cn.edu.usc.quzhijie.emrservice.registration.vo.*;
 import cn.edu.usc.quzhijie.emrservice.common.entity.DoctorExp;
+import cn.edu.usc.quzhijie.emrservice.schedule.mapper.ScheduleSlotMapper;
 import cn.edu.usc.quzhijie.emrservice.user.mapper.DoctorMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationMapper registrationMapper;
     private final DoctorMapper doctorMapper;
     private final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final ScheduleSlotMapper scheduleSlotMapper;
 
     @Override
     public List<DepartmentVO> getDepartmentInfo() {
@@ -125,7 +127,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public List<SlotsVO> getSlots(Integer scheduleId, String period) {
-        return registrationMapper.getSlotsByPeriodAndScheduleId(scheduleId, period);
+        List<SlotsVO> result = registrationMapper.getSlotsByPeriodAndScheduleId(scheduleId, period);
+        // 去除status不为available的号源
+        result.removeIf(slot -> !"available".equals(slot.getStatus()));
+
+        return result;
     }
 
     @Override
@@ -161,7 +167,11 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new BizException("所选号源已被预约或就诊人已预约了同一时间段的号源");
         }
         Integer result = registrationMapper.insertAppointment(dto);
-        if (result != 1) {
+
+        // 更新号源状态
+        Integer updateSlotResult = scheduleSlotMapper.updateSlotStatusById(dto.getSlotId(), "booked");
+
+        if (result != 1 || updateSlotResult != 1) {
             throw new BizException("预约失败");
         }
 
